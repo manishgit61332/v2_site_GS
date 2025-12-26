@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Pricing = () => {
+    const navigate = useNavigate();
     return (
         // SOLID COLOUR: Maroon. No gradients.
         <section className="section-padding" style={{ backgroundColor: 'var(--color-maroon)', color: 'var(--color-pink)' }}>
@@ -30,7 +32,12 @@ const Pricing = () => {
                         </ul>
 
                         <button
-                            onClick={() => document.getElementById('thali')?.scrollIntoView({ behavior: 'smooth' })}
+                            onClick={() => navigate('/checkout', {
+                                state: {
+                                    selectedServices: [{ name: 'The Partner (Retainer)', price: 4000 }],
+                                    totalBudget: 4000
+                                }
+                            })}
                             style={{ width: '100%', padding: '1rem', backgroundColor: 'var(--color-orange)', color: '#000', fontWeight: 'bold', borderRadius: '8px', marginTop: '2rem', cursor: 'pointer' }}
                         >
                             Start Trial
