@@ -60,8 +60,8 @@ const Pricing = () => {
                 <div style={{
                     marginTop: 'var(--spacing-lg)',
                     padding: '3rem 2rem',
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(0,0,0,0.4)', // Darker, solid overlay
+                    borderRadius: '24px',
+                    backgroundColor: 'rgba(0,0,0,0.2)', // Lightened from 0.4
                     textAlign: 'center',
                     border: 'none', // Removed border as per 'no lines' request
                 }}>

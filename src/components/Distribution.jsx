@@ -28,49 +28,99 @@ const Distribution = () => {
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--spacing-md)' }}>
-                    {/* Simple Visualization */}
-                    <motion.div
-                        style={{
-                            width: '150px',
-                            height: '150px',
-                            border: '1px solid rgba(255,255,255,0.2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderRadius: '50%',
-                            // Solid Black
-                            backgroundColor: 'var(--color-black)',
-                            color: 'var(--color-white)'
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                    >
-                        Content Idea
-                    </motion.div>
+                {/* Diagram Container */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column', // Mobile default (will be overridden by CSS if I could, but here I'll use a wrapper class or inline style hack)
+                    alignItems: 'center',
+                    gap: 'var(--spacing-md)',
+                    marginTop: 'var(--spacing-lg)'
+                }}>
 
-                    <ArrowRight color="var(--color-orange)" size={48} />
+                    {/* Responsive Layout Wrapper */}
+                    <div className="distribution-diagram" style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                        {['LinkedIn', 'Twitter/X', 'Newsletter', 'Shorts'].map((platform, i) => (
-                            <motion.div
-                                key={platform}
-                                initial={{ opacity: 0, scale: 0.5 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.1 }}
-                                style={{
-                                    padding: '1rem',
-                                    backgroundColor: 'rgba(255,255,255,0.1)',
-                                    color: '#fff',
-                                    borderRadius: '8px',
-                                    textAlign: 'center',
-                                    minWidth: '120px'
-                                }}
-                            >
-                                {platform}
-                            </motion.div>
-                        ))}
+                        {/* 1. Content Idea */}
+                        <motion.div
+                            style={{
+                                width: '160px',
+                                height: '160px',
+                                borderRadius: '50%',
+                                border: '1px solid rgba(255, 255, 255, 0.15)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'var(--color-white)',
+                                position: 'relative',
+                                boxShadow: '0 0 30px rgba(0,0,0,0.5)'
+                            }}
+                            whileHover={{ scale: 1.05, borderColor: 'var(--color-orange)', boxShadow: '0 0 50px rgba(255, 119, 1, 0.2)' }}
+                        >
+                            <span style={{ fontSize: '3rem', lineHeight: 1 }}>💡</span>
+                            <span style={{ fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: 600, opacity: 0.9 }}>Content Idea</span>
+                        </motion.div>
+
+                        {/* 2. Arrow (Responsive Rotate) */}
+                        <div className="arrow-wrapper">
+                            <ArrowRight color="var(--color-orange)" size={40} />
+                        </div>
+
+                        {/* 3. Distribution Grid */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '1.5rem',
+                            padding: '2rem',
+                            borderRadius: '24px',
+                            backgroundColor: 'rgba(255,255,255,0.03)',
+                            border: '1px solid rgba(255,255,255,0.05)'
+                        }}>
+                            {['LinkedIn', 'Twitter / X', 'Newsletter', 'Shorts'].map((platform, i) => (
+                                <motion.div
+                                    key={platform}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    style={{
+                                        padding: '1rem 2rem',
+                                        backgroundColor: 'rgba(255,255,255,0.05)',
+                                        color: '#fff',
+                                        borderRadius: '12px',
+                                        textAlign: 'center',
+                                        minWidth: '140px',
+                                        fontWeight: 500,
+                                        fontSize: '0.95rem',
+                                        border: '1px solid transparent'
+                                    }}
+                                    whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }}
+                                >
+                                    {platform}
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
                 </div>
+
+                <style>{`
+                    .distribution-diagram {
+                        flex-direction: column;
+                    }
+                    .arrow-wrapper {
+                        transform: rotate(90deg);
+                        margin: 1rem 0;
+                    }
+                    @media (min-width: 768px) {
+                        .distribution-diagram {
+                            flex-direction: row;
+                        }
+                        .arrow-wrapper {
+                            transform: rotate(0deg);
+                            margin: 0 2rem;
+                        }
+                    }
+                `}</style>
 
                 <p className="text-center" style={{ marginTop: 'var(--spacing-lg)', maxWidth: '600px', marginInline: 'auto', opacity: 0.8 }}>
                     Most agencies spend 90% of budget on making the video and 10% on posting it. We flip the script.
