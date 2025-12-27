@@ -26,7 +26,7 @@ const TeamKitchen = () => {
 
                 <div style={{ maxWidth: '800px', margin: '0 auto' }}>
                     {TEAM_MEMBERS.map((member, index) => (
-                        <div key={index} style={{ position: 'relative', marginBottom: '1rem' }}>
+                        <div key={index} style={{ position: 'relative', marginBottom: '2rem' }}>
                             <motion.div
                                 onClick={() => setActiveMember(activeMember === index ? null : index)}
                                 style={{

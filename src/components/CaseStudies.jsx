@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 
 const projects = [
@@ -50,6 +50,7 @@ const projects = [
 ];
 
 const CaseStudies = () => {
+    const containerRef = useRef(null);
 
     // 1. TALLER SECTION = CONTROLLED SCROLL (400vh)
     const { scrollYProgress } = useScroll({

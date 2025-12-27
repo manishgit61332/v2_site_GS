@@ -115,7 +115,9 @@ const Hero = () => {
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'none', // Hide default cursor
-                paddingTop: '80px', // Navbar clearance
+                paddingTop: '0', // UPDATED: Removing nav clearance to let flex center properly (Nav is fixed/overlay?)
+                // If Nav is sticky/fixed, we need some top padding, but maybe less forces it down?
+                // Actually, if it's 'center', removing padding lets it float to true center.
             }}
         >
             {/* Custom Logo Cursor */}
@@ -137,7 +139,6 @@ const Hero = () => {
                 }}
             />
 
-            {/* AMBIENT VISUALS: Particles */}
             {/* AMBIENT VISUALS: Particles removed (Global now) */}
 
             <motion.div
@@ -145,7 +146,15 @@ const Hero = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
                 className="container text-center"
-                style={{ position: 'relative', zIndex: 1 }}
+                style={{
+                    position: 'relative',
+                    zIndex: 1,
+                    flex: 1, // Takes up all available space
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center', // Centers content vertically within this space
+                    alignItems: 'center'
+                }}
             >
                 {/* METRIC SAFETY: Moved to Top (Eyebrow) to declutter flow */}
                 <motion.div
