@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import team1 from '../assets/team_cutout_1.png';
+import team2 from '../assets/team_cutout_2.png';
+import team3 from '../assets/team_cutout_3.png';
+import team4 from '../assets/team_cutout_4.png';
+
+// Using placeholders for the rest or reusing to keep it simple as requested
 const TEAM_MEMBERS = [
-    { name: 'Manish', role: 'Head Chef', title: 'Founder & Creative Director', chat: "Trends fade. I care if it holds up in 2 years." },
-    { name: 'Amulya', role: 'Design Head', title: 'Structure & Restraint', chat: "If it looks clever but confuses people, it’s bad design." },
-    { name: 'Ayush Singh', role: 'Client Acquisition', title: 'Realism & Clarity', chat: "If a client can’t explain why they’re buying, we pause the project." },
-    { name: 'Mohit Silla', role: 'Business & PR', title: 'Relationship Builder', chat: "Reputation compounds faster than ads. We protect it." },
-    { name: 'Aayush Mohan', role: 'Creative Strategist', title: 'Systems Thinker', chat: "Every piece of content is either noise or signal." },
-    { name: 'Ayush Tripathi', role: 'Video & Storytelling', title: 'Emotion with Discipline', chat: "A good cut isn’t flashy. It just feels inevitable." },
-    { name: 'CREA', role: 'Operations (Robot)', title: 'Silent Efficiency', chat: "Tasks executed. No opinions formed." },
+    { name: 'Manish', role: 'Head Chef', title: 'Founder & Creative Director', chat: "Trends fade. I care if it holds up in 2 years.", img: team1 },
+    { name: 'Amulya', role: 'Design Head', title: 'Structure & Restraint', chat: "If it looks clever but confuses people, it’s bad design.", img: team2 },
+    { name: 'Ayush Singh', role: 'Client Acquisition', title: 'Realism & Clarity', chat: "If a client can’t explain why they’re buying, we pause the project.", img: team3 },
+    { name: 'Mohit Silla', role: 'Business & PR', title: 'Relationship Builder', chat: "Reputation compounds faster than ads. We protect it.", img: team4 },
+    { name: 'Aayush Mohan', role: 'Creative Strategist', title: 'Systems Thinker', chat: "Every piece of content is either noise or signal.", img: team1 },
+    { name: 'Ayush Tripathi', role: 'Video & Storytelling', title: 'Emotion with Discipline', chat: "A good cut isn’t flashy. It just feels inevitable.", img: team4 },
+    { name: 'CREA', role: 'Operations (Robot)', title: 'Silent Efficiency', chat: "Tasks executed. No opinions formed.", img: team3 },
 ];
 
 const TeamKitchen = () => {
@@ -42,41 +48,47 @@ const TeamKitchen = () => {
                                 }}
                                 whileHover={{ paddingLeft: '2rem' }}
                             >
-                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'baseline' }}>
-                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{member.name}</h3>
-                                    <span style={{ fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{member.role}</span>
+                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                    {/* Avatar Cutout (Visible on active or hover via CSS if needed, but here simple) */}
+                                    <AnimatePresence>
+                                        {activeMember === index && (
+                                            <motion.img
+                                                src={member.img}
+                                                initial={{ opacity: 0, scale: 0.5 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.5 }}
+                                                style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover', border: '1px solid #D4AF37' }}
+                                            />
+                                        )}
+                                    </AnimatePresence>
+
+                                    <div>
+                                        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{member.name}</h3>
+                                        <span style={{ fontSize: '0.9rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>{member.role}</span>
+                                    </div>
                                 </div>
                                 <div style={{ opacity: 0.6, fontStyle: 'italic', fontSize: '0.9rem' }}>{member.title}</div>
                             </motion.div>
 
+                            {/* Thinking/Chat Line Reveal */}
                             <AnimatePresence>
                                 {activeMember === index && (
                                     <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: 'auto', opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
                                         style={{ overflow: 'hidden' }}
                                     >
-                                        <div style={{
-                                            padding: '1.5rem 2rem',
-                                            backgroundColor: '#111',
-                                            borderLeft: '2px solid #D4AF37',
-                                            margin: '0.5rem 0 1.5rem 0'
-                                        }}>
-                                            <p style={{ fontFamily: 'monospace', color: '#D4AF37' }}>
-                                                <span style={{ opacity: 0.5, marginRight: '1rem' }}>{member.name}:</span>
-                                                "{member.chat}"
-                                            </p>
+                                        <div style={{ padding: '1rem 2rem', color: '#D4AF37', fontStyle: 'italic', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <span style={{ fontSize: '1.5rem', lineHeight: 0 }}>“</span>
+                                            {member.chat}
+                                            <span style={{ fontSize: '1.5rem', lineHeight: 0 }}>”</span>
                                         </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                         </div>
                     ))}
-
-                    <div style={{ padding: '1.5rem', textAlign: 'center', opacity: 0.5, fontStyle: 'italic', marginTop: '2rem' }}>
-                        + A rotating crew of specialist freelancers held to the same standards.
-                    </div>
                 </div>
             </div>
         </section>

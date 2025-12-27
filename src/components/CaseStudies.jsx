@@ -1,34 +1,36 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, useSpring } from 'framer-motion';
-import { ArrowUpRight, ArrowRight } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
-const projects = [
+const CATEGORIES = ['All', 'Web Experiences', 'Product Commercials', 'Branding', 'Social & Campaigns'];
+
+const PROJECTS = [
     {
         id: 0,
         title: 'Project Alpha',
-        category: 'Fintech',
+        category: 'Web Experiences',
         color: '#C27B7F',
         img: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop',
         link: '#',
-        problem: 'A Series-A fintech struggled to communicate its mission to investors.',
+        problem: 'A Series-A fintech struggled to communicate its mission.',
         move: 'Complete narrative workshop & rebranding.',
         shift: 'Raised $4M, reached 20k waitlist users.'
     },
     {
         id: 1,
         title: 'Nebula AI',
-        category: 'SaaS',
+        category: 'Product Commercials',
         color: '#7B8FC2',
         img: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop',
         link: '#',
         problem: 'Powerful AI tool looked like another generic wrapper.',
-        move: 'High-contrast "Dark Mode" identity & viral launch video.',
-        shift: '1.2M views on X, 500+ paying users in month 1.'
+        move: 'High-contrast "Dark Mode" viral launch video.',
+        shift: '1.2M views on X, 500+ paying users.'
     },
     {
         id: 2,
         title: 'Velvet',
-        category: 'Consumer',
+        category: 'Branding',
         color: '#C2A87B',
         img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop',
         link: '#',
@@ -39,228 +41,130 @@ const projects = [
     {
         id: 3,
         title: 'Nexus',
-        category: 'Infrastructure',
+        category: 'Web Experiences',
         color: '#7BC29D',
         img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop',
         link: '#',
-        problem: 'Complex dev-tooling was confusing non-technical stakeholders.',
+        problem: 'Complex dev-tooling was confusing stakeholders.',
         move: 'Simplified 3D interactive visualizations.',
         shift: 'Sales cycle reduced by 40%.'
+    },
+    {
+        id: 4,
+        title: 'Pulse',
+        category: 'Social & Campaigns',
+        color: '#A87BC2',
+        img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop',
+        link: '#',
+        problem: 'Fitness app needed to break through noise.',
+        move: 'Influencer-led challenge campaign.',
+        shift: '150k app installs in 2 weeks.'
     }
 ];
 
 const CaseStudies = () => {
-    const containerRef = useRef(null);
+    const [activeCategory, setActiveCategory] = useState('All');
 
-    // 1. TALLER SECTION = CONTROLLED SCROLL (400vh)
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    });
-
-    // 2. SMOOTH RAW INDEX (Starts at -2 so the wave "enters" the screen)
-    const scrollIndex = useTransform(scrollYProgress, [0, 1], [-2, projects.length - 1]);
-    const smoothIndex = useSpring(scrollIndex, { stiffness: 120, damping: 25, mass: 1 });
-
-    // Desktop Accordion Item (Reactive)
-    const AccordionItem = ({ project, rawIndex }) => {
-
-        // 3. FLUID "ROPE-WAVE" PHYSICS (Normalized Gaussian)
-        // No if/else steps. Pure smooth math.
-        const widthPercent = useTransform(rawIndex, (idx) => {
-            // Calculate weights for ALL items first
-            const weights = projects.map((p) => {
-                const dist = Math.abs(idx - p.id);
-                // Gaussian Curve:
-                // Base weight (min width) = 15
-                // Peak amplitude (max expansion) = 80
-                // Sigma (width of influence) = 2.0
-                const sigma = 1.2;
-                const weight = 8 + 60 * Math.exp(-(dist * dist) / (2 * sigma * sigma));
-                return weight;
-            });
-
-            // Calculate total weight for normalization
-            const totalWeight = weights.reduce((acc, w) => acc + w, 0);
-
-            // Get THIS item's normalized %
-            const myWeight = weights[project.id];
-            return (myWeight / totalWeight) * 100;
-        });
-
-        // Smooth derived values based on width %
-        const borderRadius = useTransform(widthPercent, [5, 30], [4, 32]);
-        const scaleValue = useTransform(widthPercent, [5, 40], [0.95, 1]);
-
-        // Elevation & Depth (User Request)
-        // Elevation & Depth (Exaggerated per User Request)
-        // Widened curve [5, 45] ensures neighbors lift too, creating a "Wave" shape.
-        const yTranslation = useTransform(widthPercent, [5, 45], [0, -80]);
-        const cardShadow = useTransform(widthPercent, [5, 45], [
-            "0 10px 30px rgba(0,0,0,0.3)",  // Spines have subtle shadow
-            "0 100px 200px rgba(0,0,0,0.9)" // Active has massive depth
-        ]);
-
-
-
-        // Convert percentage to CSS string
-        const widthString = useTransform(widthPercent, (w) => `${w}%`);
-
-        // Content Reveal based on width - Overlapped to prevent empty state
-        const textOpacity = useTransform(widthPercent, [12, 25], [1, 0]);
-        const contentOpacity = useTransform(widthPercent, [20, 40], [0, 1]);
-
-        return (
-            <motion.div
-                style={{
-                    backgroundColor: project.color,
-                    backgroundImage: `url(${project.img})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    color: '#fff',
-                    height: '650px',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: cardShadow,
-                    y: yTranslation,
-                    zIndex: 10,
-
-                    // EXPLICIT WIDTH SYSTEM (No Flex)
-                    width: widthString,
-                    flexShrink: 0,
-                    flexGrow: 0,
-                    borderRadius: borderRadius,
-                    marginRight: 0,
-                    marginLeft: 0,
-                    scale: scaleValue,
-                    willChange: 'width, border-radius',
-                    transformOrigin: 'center center',
-                }}
-            >
-                {/* Dark Gradient Overlay for Readability */}
-                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, ${project.color}DD 0%, rgba(0,0,0,0.6) 100%)`, mixBlendMode: 'multiply' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%)', zIndex: 1 }} />
-
-                {/* 1. COLLAPSED STATE: Vertical Text */}
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '2rem',
-                        opacity: textOpacity,
-                        pointerEvents: 'none',
-                        textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                    }}
-                >
-                    <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 600, fontSize: '1rem' }}>
-                        {project.category}
-                    </span>
-                    <span style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)', fontFamily: 'var(--font-heading)', fontSize: '2.5rem', whiteSpace: 'nowrap' }}>
-                        {project.title}
-                    </span>
-                </motion.div>
-
-                {/* 2. EXPANDED STATE: Full Content (On Top of Color) */}
-                <motion.div
-                    style={{
-                        position: 'absolute',
-                        inset: 0,
-                        opacity: contentOpacity,
-                        zIndex: 20,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        padding: '3rem',
-                        justifyContent: 'space-between',
-                        textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-                    }}
-                >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
-                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#fff' }} />
-                            <span style={{ textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600, fontSize: '0.9rem' }}>
-                                {project.category}
-                            </span>
-                        </div>
-                        {/* Make the whole card clickable? User said "make the buttons work". The arrow button is best. */}
-                        <motion.a
-                            href={project.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,255,255,0.2)' }}
-                            style={{
-                                padding: '0.8rem',
-                                borderRadius: '50%',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#fff',
-                                border: '1px solid rgba(255,255,255,0.2)'
-                            }}
-                        >
-                            <ArrowUpRight size={28} />
-                        </motion.a>
-                    </div>
-
-
-
-                    <div>
-                        <h3 style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', lineHeight: 0.9, marginBottom: '1rem' }}>
-                            {project.title}
-                        </h3>
-                        <p style={{ opacity: 0.9, maxWidth: '500px', fontSize: '1.2rem', lineHeight: 1.4 }}>
-                            Engineered for dominance. Rebuilt stacks for market capture.
-                        </p>
-                    </div>
-                </motion.div>
-            </motion.div>
-        );
-    };
+    const filteredProjects = activeCategory === 'All'
+        ? PROJECTS
+        : PROJECTS.filter(p => p.category === activeCategory);
 
     return (
-        <section id="work" ref={containerRef} style={{ height: '400vh', position: 'relative', backgroundColor: 'var(--color-black)', color: 'var(--color-white)' }}>
+        <section id="work" className="section-padding" style={{ backgroundColor: '#050505', color: '#fff', minHeight: '100vh', paddingBottom: '20vh' }}>
+            <div className="container">
+                <div style={{ marginBottom: '4rem' }}>
+                    <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontFamily: 'var(--font-heading)', marginBottom: '2rem' }}>
+                        What We Do.
+                    </h2>
 
-            <div className="sticky-wrapper" style={{ position: 'sticky', top: 0, height: '100vh', display: 'block', overflow: 'hidden', padding: '0 2rem', paddingTop: '10rem' }}>
-
-                <h2 style={{ marginBottom: '4rem', fontSize: '3rem', paddingLeft: '1rem', position: 'relative', zIndex: 30 }}>Our Work.</h2>
-
-                {/* DESKTOP: SCROLL-DRIVEN ACCORDION - FULL WIDTH */}
-                <div className="desktop-accordion" style={{ display: 'flex', height: '700px', width: '100%', gap: '0' }}>
-                    {projects.map((project) => (
-                        <AccordionItem
-                            key={project.id}
-                            project={project}
-                            rawIndex={smoothIndex}
-                        />
-                    ))}
+                    {/* CATEGORY TABS */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
+                        {CATEGORIES.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveCategory(cat)}
+                                style={{
+                                    padding: '0.5rem 1.5rem',
+                                    borderRadius: '50px',
+                                    border: `1px solid ${activeCategory === cat ? '#D4AF37' : 'rgba(255,255,255,0.2)'}`,
+                                    backgroundColor: activeCategory === cat ? '#D4AF37' : 'transparent',
+                                    color: activeCategory === cat ? '#000' : '#fff',
+                                    transition: 'all 0.3s',
+                                    fontSize: '0.9rem',
+                                    fontWeight: activeCategory === cat ? 'bold' : 'normal',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                    <p style={{ opacity: 0.7 }}>Not just pretty pixels. Measurable impact.</p>
                 </div>
 
-                {/* MOBILE: HORIZONTAL SCROLL */}
-                <div className="mobile-scroll" style={{ display: 'none', gap: '1rem', overflowX: 'auto', paddingBottom: '2rem' }}>
-                    {projects.map((project) => (
-                        <div key={project.id} style={{ flex: '0 0 280px', height: '380px', backgroundColor: project.color, color: project.text || '#fff', borderRadius: '16px', padding: '2rem' }}>
-                            <span style={{ textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 600 }}>{project.category}</span>
-                            <h3 style={{ fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>{project.title}</h3>
-                        </div>
-                    ))}
-                </div>
+                <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+                    <AnimatePresence mode='popLayout'>
+                        {filteredProjects.map((project) => (
+                            <motion.div
+                                layout
+                                key={project.id}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3 }}
+                                style={{
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '16px',
+                                    padding: '2rem',
+                                    backgroundColor: 'rgba(255,255,255,0.02)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '1.5rem'
+                                }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div>
+                                        <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: project.color, letterSpacing: '1px' }}>{project.category}</span>
+                                        <h3 style={{ fontSize: '1.8rem', marginTop: '0.5rem' }}>{project.title}</h3>
+                                    </div>
+                                    <a
+                                        href={project.link}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{
+                                            width: '40px', height: '40px', borderRadius: '50%',
+                                            border: '1px solid rgba(255,255,255,0.2)',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            color: '#fff', transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        <ArrowUpRight size={20} />
+                                    </a>
+                                </div>
+
+                                {/* PROBLEM */}
+                                <div>
+                                    <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.3rem', textTransform: 'uppercase' }}>The Problem</p>
+                                    <p style={{ fontSize: '1rem', lineHeight: 1.4 }}>{project.problem}</p>
+                                </div>
+
+                                {/* MOVE */}
+                                <div>
+                                    <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.3rem', textTransform: 'uppercase' }}>The Move</p>
+                                    <p style={{ fontSize: '1rem', lineHeight: 1.4 }}>{project.move}</p>
+                                </div>
+
+                                {/* SHIFT */}
+                                <div style={{ padding: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '8px', borderLeft: `2px solid ${project.color}` }}>
+                                    <p style={{ fontSize: '0.8rem', opacity: 0.5, marginBottom: '0.3rem', textTransform: 'uppercase' }}>The Shift</p>
+                                    <p style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{project.shift}</p>
+                                </div>
+
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </motion.div>
             </div>
-
-            <style>{`
-                @media (max-width: 1024px) {
-                    .desktop-accordion { display: none !important; }
-                    .mobile-scroll { display: flex !important; }
-                    section { height: auto !important; }
-                    .sticky-wrapper { height: auto !important; position: static !important; display: block !important; padding: 4rem 0 !important; }
-                }
-            `}</style>
         </section>
     );
 };
