@@ -19,7 +19,7 @@ const Belief = () => {
                     </h2>
 
                     <p style={{ fontSize: '1.25rem', lineHeight: 1.6, marginBottom: '3rem', maxWidth: '700px', opacity: 0.9 }}>
-                        We partner with founders in SaaS, tech and venture to craft the narratives and design systems that make <span style={{ color: '#D4AF37', fontStyle: 'italic' }}>complexity contagious.</span>
+                        We partner with founders in SaaS, tech and venture to craft the narratives and design systems that make <span style={{ color: '#D4AF37', fontStyle: 'italic' }}>complexity compelling and clear.</span>
                     </p>
 
                     {/* PROOF POINTS */}

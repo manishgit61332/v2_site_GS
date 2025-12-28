@@ -131,7 +131,7 @@ const Distribution = () => {
                 `}</style>
 
                 <p className="text-center" style={{ marginTop: 'var(--spacing-lg)', maxWidth: '600px', marginInline: 'auto', opacity: 0.8 }}>
-                    Most agencies spend 90% of budget on making the video and 10% on posting it. We flip the script.
+                    Most agencies spend 90% of budget on making the video and 10% on posting it. We invest 90% in distribution, 10% in production.
                 </p>
             </div>
         </section>

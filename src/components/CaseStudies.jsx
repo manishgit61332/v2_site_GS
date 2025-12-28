@@ -70,8 +70,7 @@ const CaseStudies = () => {
                         Services.
                     </h2>
                     <p style={{ opacity: 0.6, marginTop: '1rem', maxWidth: '400px' }}>
-                        We don't sell hours. We sell outcomes. <br />
-                        Scroll to explore.
+                        Our work speaks for itself.
                     </p>
                 </div>
 

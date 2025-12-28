@@ -39,7 +39,7 @@ const Philosophy = () => {
                     <QuoteBlock
                         quote="The only clichés I want to see are the ones I make myself."
                         author="Satyajit Ray"
-                        interpretation="We don't chase trends. We set the standard."
+                        interpretation="We create original work, not copies."
                         delay={0.5}
                     />
                 </div>

@@ -163,7 +163,7 @@ const Hero = () => {
                     transition={{ delay: 0.5 }}
                     style={{ marginBottom: '1rem', display: 'inline-block', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', opacity: 0.7, color: 'var(--color-mint)' }}
                 >
-                    <LiquidText text="Trusted by 15+ Visionaries & Founders" config={{ y: -5, scaleY: 1.2, scaleX: 0.9, color: 'var(--color-mint)' }} />
+                    <LiquidText text="Serving 15+ founders across SaaS, tech, and venture" config={{ y: -5, scaleY: 1.2, scaleX: 0.9, color: 'var(--color-mint)' }} />
                 </motion.div>
 
                 <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 5rem)', marginBottom: '2rem', lineHeight: 1.1 }}>
@@ -178,8 +178,8 @@ const Hero = () => {
                         <LiquidText text="In 2019, your product just had to work. Fewer competitors. Slower cycles." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
                     </p>
                     <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
-                        <LiquidText text="Today? Anyone with Wi-Fi and ChatGPT can launch a 'startup' in an afternoon." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
-                        <LiquidText text="Code, content, even charisma... all cloned in minutes." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
+                        <LiquidText text="Today, anyone can launch a product in an afternoon with AI tools." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} /><br />
+                        <LiquidText text="But building a brand that stands out? That takes craft." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
                     </p>
                     <p style={{ marginBottom: '1.5rem', fontSize: '1.4rem', color: '#fff', fontWeight: 500, lineHeight: 1.3 }}>
                         <LiquidText text="So how do you stand out now?" config={{ y: -20, scaleY: 1.4, scaleX: 0.8, color: 'var(--color-orange)' }} /><br />
@@ -207,7 +207,7 @@ const Hero = () => {
                 }}
                 onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
             >
-                ↓ See what that actually looks like
+                ↓ See our work
             </motion.div>
         </section>
     );

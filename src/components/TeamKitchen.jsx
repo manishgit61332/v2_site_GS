@@ -59,7 +59,7 @@ const TeamKitchen = () => {
                         letterSpacing: '1px'
                     }}
                 >
-                    THE TEAM BEHIND THE TASTE /// HOVER TO DISCOVER
+                    Meet the team building your brand
                 </motion.p>
             </div>
 

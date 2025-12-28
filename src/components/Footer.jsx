@@ -36,7 +36,7 @@ const Footer = () => {
                             cursor: 'pointer'
                         }}
                     >
-                        Talk When You're Serious
+                        Book a Strategy Call
                     </button>
                 </div>
 
@@ -50,7 +50,7 @@ const Footer = () => {
                         visible: { opacity: 1, filter: 'blur(0px)' }
                     }}
                 >
-                    <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Are you serious?</p>
+                    <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Ready to start?</p>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
                         <a href="mailto:contact@gensync.com">contact@gensync.com</a>
                         <a href="#">LinkedIn</a>
