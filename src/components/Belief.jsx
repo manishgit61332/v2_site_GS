@@ -1,12 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 const Belief = () => {
+    const setGlobalTheme = useSectionColor();
+
     return (
-        <section
+        <motion.section
+            onViewportEnter={() => {
+                console.log("Belief ENTERED. Setting GLOBAL THEME to Mint/Black.");
+                setGlobalTheme('#E3FFEB', '#050507', 1.5);
+            }}
+            viewport={{ margin: "-20% 0px -20% 0px" }}
             className="section-padding"
             style={{
-                backgroundColor: 'var(--color-mint)',
+                backgroundColor: 'transparent',
                 color: 'var(--color-black)',
                 minHeight: '80vh',
                 display: 'flex',
@@ -23,12 +31,12 @@ const Belief = () => {
                     style={{ maxWidth: '900px' }}
                 >
                     {/* THESIS */}
-                    <h2 className="font-heading text-lg" style={{ marginBottom: '2rem', color: 'var(--color-black)' }}>
+                    <h2 className="font-heading text-lg" style={{ marginBottom: '2rem', color: 'var(--current-text-color)' }}>
                         Most products don’t fail because they’re bad—<br />
                         <span style={{ opacity: 0.7 }}>they fail because no one understands them fast enough.</span>
                     </h2>
 
-                    <p className="text-md font-body" style={{ marginBottom: '3rem', maxWidth: '700px', opacity: 0.9, color: 'var(--color-black)' }}>
+                    <p className="text-md font-body" style={{ marginBottom: '3rem', maxWidth: '700px', opacity: 0.9, color: 'var(--current-text-color)' }}>
                         We partner with founders in SaaS, tech and venture to craft the narratives and design systems that make <span className="font-italic" style={{ color: 'var(--color-orange)' }}>complexity compelling and clear.</span>
                     </p>
 
@@ -50,7 +58,7 @@ const Belief = () => {
                     </div>
                 </motion.div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

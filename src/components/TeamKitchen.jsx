@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 // Import images
 import team1 from '../assets/team_cutout_1.png';
@@ -8,19 +9,25 @@ import team3 from '../assets/team_cutout_3.png';
 import team4 from '../assets/team_cutout_4.png';
 
 const TEAM = [
-    { name: 'Manish', role: 'Head Chef', img: team1, quote: "Trends fade. Taste lasts." },
-    { name: 'Amulya', role: 'Design', img: team2, quote: "Chaos needs structure." },
-    { name: 'Ayush S', role: 'Acquisition', img: team3, quote: "Numbers don't lie." },
-    { name: 'Mohit', role: 'Business', img: team4, quote: "Reputation is currency." },
-    { name: 'Aayush M', role: 'Strategy', img: team1, quote: "Find the signal." },
-    { name: 'Ayush T', role: 'Video', img: team4, quote: "Make them feel it." },
+    { name: 'Manish', role: 'Head Chef', img: team1, quote: "If I can't explain it in one sentence, it's not done." },
+    { name: 'Amulya', role: 'Visual Lead', img: team2, quote: "Ugly converts, but beautiful endures." },
+    { name: 'Ayush S', role: 'Acquisition', img: team3, quote: "Traffic is vanity. Conversion is sanity." },
+    { name: 'Mohit', role: 'Operations', img: team4, quote: "Creativity without deadlines is just a dream." },
+    { name: 'Aayush M', role: 'Strategy', img: team1, quote: "Product-Market Fit is a narrative problem." },
+    { name: 'Ayush T', role: 'Production', img: team4, quote: "We fix it in pre-production, not post." },
+    { name: 'Manikanta', role: 'Editor & Storywriter', img: team3, quote: "Every cut must advance the story." },
+    { name: 'Crea', role: 'Operations Robot', img: team2, quote: "Optimizing for maximum throughput." },
 ];
 
 const TeamKitchen = () => {
+    const setGlobalTheme = useSectionColor();
+
     return (
-        <section
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#050505', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }}
             style={{
-                backgroundColor: '#050505',
+                // backgroundColor: '#050505', // Removed for Global Atmosphere
                 color: '#fff',
                 minHeight: '100vh',
                 display: 'flex',
@@ -54,7 +61,7 @@ const TeamKitchen = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                     style={{
-                        fontFamily: 'var(--font-mono)',
+                        fontFamily: 'var(--font-body)',
                         fontSize: '1rem',
                         maxWidth: '500px',
                         letterSpacing: '1px'
@@ -68,7 +75,12 @@ const TeamKitchen = () => {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+                    // On large screens, we want exactly 4 columns. 
+                    // Since auto-fit might drop to 3 if width is tight, we can use a media query or just tweak the minmax.
+                    // But simpler: let's use a media query style approach via standard CSS or stick to a robust minmax that fits 4.
+                    // Actually, the user specifically asked for 4x2. Let's make it explicitly 4 columns on wide screens.
+                    gridTemplateColumns: 'repeat(4, 1fr)',
                     gap: 'clamp(1.5rem, 3vw, 2.5rem)',
                     maxWidth: '1400px',
                     margin: '0 auto',
@@ -79,7 +91,7 @@ const TeamKitchen = () => {
                     <TeamCard key={index} member={member} index={index} />
                 ))}
             </div>
-        </section>
+        </motion.section>
     );
 };
 
@@ -213,7 +225,7 @@ const TeamCard = ({ member, index }) => {
                         >
                             <p
                                 style={{
-                                    fontFamily: 'var(--font-mono)',
+                                    fontFamily: 'var(--font-body)',
                                     fontSize: '0.75rem',
                                     marginBottom: '0.75rem',
                                     textTransform: 'uppercase',

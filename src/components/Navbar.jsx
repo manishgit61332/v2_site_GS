@@ -81,18 +81,21 @@ const Navbar = () => {
                                     setIsMobileMenuOpen(false);
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
-                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'baseline', gap: '1px', position: 'relative', zIndex: 1002 }}
+                                style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1002 }}
                             >
-                                <span className="font-sans" style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.02em', color: '#fff' }}>Gen</span>
-                                <span className="font-serif" style={{ color: 'var(--color-orange)', fontSize: '1.7rem', fontStyle: 'italic', letterSpacing: '0.02em' }}>Sync</span>
+                                <img src={logo} alt="Gensync Logo" style={{ height: '32px', width: 'auto' }} />
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '1px' }}>
+                                    <span className="font-sans" style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.02em', color: '#fff' }}>Gen</span>
+                                    <span className="font-serif" style={{ color: 'var(--color-orange)', fontSize: '1.7rem', fontStyle: 'italic', letterSpacing: '0.02em' }}>Sync</span>
+                                </div>
                             </div>
 
                             {/* Desktop Menu */}
                             {!isMobile && (
                                 <div style={{ display: 'flex', gap: '2rem' }}>
-                                    <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '0.9rem' }}>Work</button>
-                                    <button onClick={() => scrollToSection('thali')} style={{ color: '#fff', fontSize: '0.9rem' }}>Build Thali</button>
-                                    <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '0.9rem' }}>Contact</button>
+                                    <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '0.9rem' }}>Proof + Stories</button>
+                                    <button onClick={() => scrollToSection('protocol')} style={{ color: '#fff', fontSize: '0.9rem' }}>The Protocol</button>
+                                    <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '0.9rem' }}>Start the Narrative Review</button>
                                 </div>
                             )}
 
@@ -139,9 +142,9 @@ const Navbar = () => {
                             gap: '2rem'
                         }}
                     >
-                        <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Work</button>
-                        <button onClick={() => scrollToSection('thali')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Build Thali</button>
-                        <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Contact</button>
+                        <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Proof + Stories</button>
+                        <button onClick={() => scrollToSection('protocol')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>The Protocol</button>
+                        <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-heading)' }}>Start the Narrative Review</button>
                     </motion.div>
                 )}
             </AnimatePresence>

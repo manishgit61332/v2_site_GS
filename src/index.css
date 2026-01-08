@@ -34,8 +34,8 @@
   :root {
     --spacing-sm: 1.5rem;
     --spacing-md: 3rem;
-    --spacing-lg: 6rem;
-    --spacing-xl: 10rem;
+    --spacing-lg: 4rem;
+    --spacing-xl: 6rem;
   }
 }
 
@@ -47,8 +47,9 @@
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-black);
-  color: var(--color-white);
+  background-color: transparent;
+  color: var(--current-text-color, #FFFFFF);
+  transition: color var(--current-transition, 1.5s) ease;
   overflow-x: hidden;
   position: relative;
 }
@@ -60,13 +61,16 @@ body::before {
   inset: -50%;
   width: 200%;
   height: 200%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opactiy='0.5'/%3E%3C/svg%3E");
   background-repeat: repeat;
   animation: grain 0.5s steps(1) infinite;
-  mix-blend-mode: overlay;
+  /* Optimized for performance (Fixes Brave/Chrome lag) */
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translateZ(0);
+  /* Force GPU */
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 @keyframes grain {
@@ -94,6 +98,7 @@ body::before {
 html,
 body {
   cursor: auto;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar {
@@ -202,7 +207,7 @@ a {
 
 /* Premium Highlighter Effects - Subtle Contrast */
 .highlight-orange {
-  background: linear-gradient(180deg, transparent 65%, rgba(255, 119, 1, 0.2) 65%);
+  background: linear-gradient(180deg, transparent 60%, rgba(255, 119, 1, 0.4) 60%);
   padding: 0 0.15em;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

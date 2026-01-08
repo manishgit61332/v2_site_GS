@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus, X, Utensils, Info, Layout, PenTool, Video, Laptop, Megaphone, Smartphone, RefreshCw, Eye } from 'lucide-react';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 // Enhanced Services List with Preview Colors/Placeholders
 const SERVICES = [
+    // ... (unchanged)
     // Staples
     { id: 'web-design', category: 'Staples', name: 'Website Design', price: 1800, time: 14, desc: 'High-converting, premium aesthetic.', icon: <Layout size={20} />, previewColor: '#D4AF37', previewText: 'Minimalist Layouts', textColor: '#000' },
     { id: 'brand-id', category: 'Staples', name: 'Brand Identity', price: 1200, time: 10, desc: 'Logo, colors, typography system.', icon: <PenTool size={20} />, previewColor: '#8B4513', previewText: 'Bold Typography', textColor: '#fff' },
@@ -22,6 +24,7 @@ const SERVICES = [
 const ThaliBuilder = () => {
     // ... (state vars same)
     const navigate = useNavigate();
+    const setGlobalTheme = useSectionColor();
     const [selectedIds, setSelectedIds] = useState([]);
     const [hoveredService, setHoveredService] = useState(null);
     const [showHint, setShowHint] = useState(false);
@@ -41,14 +44,19 @@ const ThaliBuilder = () => {
     }, [selectedIds]);
 
     return (
-        <section id="thali" className="section-padding" style={{
-            // ... styles
-            background: 'linear-gradient(to bottom, #0a1f0a, #1a4d1a)',
-            color: 'var(--color-white)',
-            position: 'relative',
-            paddingTop: 'var(--spacing-xl)',
-            borderTop: 'none'
-        }}>
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#0a1f0a', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }}
+            id="thali"
+            className="section-padding"
+            style={{
+                // ... styles
+                background: 'transparent',
+                color: 'var(--color-white)',
+                position: 'relative',
+                paddingTop: 'var(--spacing-xl)',
+                borderTop: 'none'
+            }}>
             {/* ... container/title/hint code ... */}
             <div className="container">
                 {/* Brass/Gold Accent for Title */}
@@ -220,7 +228,7 @@ const ThaliBuilder = () => {
                         /* On mobile, let's make the preview text clearer */
                     }
                 `}</style>
-        </section>
+        </motion.section>
     );
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 const QuoteBlock = ({ quote, author, interpretation, delay }) => (
     <motion.div
@@ -19,8 +20,15 @@ const QuoteBlock = ({ quote, author, interpretation, delay }) => (
 );
 
 const Philosophy = () => {
+    const setGlobalTheme = useSectionColor();
+
     return (
-        <section className="section-padding" style={{ backgroundColor: 'var(--color-black)', overflow: 'hidden' }}>
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#000000', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }}
+            className="section-padding"
+            style={{ backgroundColor: 'transparent', overflow: 'hidden' }}
+        >
             <div className="container">
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-md)', justifyContent: 'space-between' }}>
                     <QuoteBlock
@@ -44,7 +52,7 @@ const Philosophy = () => {
                     />
                 </div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

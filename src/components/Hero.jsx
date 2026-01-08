@@ -1,221 +1,176 @@
-import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React, { useEffect } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
+import { useSectionColor } from '../context/ScrollColorContext';
 import logo from '../assets/logo-transparent.png';
 
-
-const GlitchWord = () => {
-    const [text, setText] = React.useState("Cults");
-    const [isHovered, setIsHovered] = React.useState(false);
-
-    React.useEffect(() => {
-        let interval;
-        if (isHovered) {
-            interval = setInterval(() => {
-                // Toggle between Cults and the Edgy Variant
-                setText(prev => prev === "Cults" ? "Cu*ts" : "Cults");
-            }, 500); // 0.5s interval as requested
-        } else {
-            setText("Cults");
-        }
-        return () => clearInterval(interval);
-    }, [isHovered]);
-
+// "Dopamine" Text Reveal Component
+const CinematicReveal = ({ children, delay = 0 }) => {
     return (
-        <span
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                cursor: 'pointer',
-                position: 'relative',
-                display: 'inline-block',
-                // Min-width prevents layout shift (approximated for "Cults")
-                minWidth: '5ch',
-                color: isHovered ? 'var(--color-orange)' : '#fff', // Orange highlight on hover
-                transition: 'color 0.2s',
+        <motion.div
+            initial={{ opacity: 0, filter: 'blur(15px)', scale: 1.05, y: 10 }}
+            animate={{ opacity: 1, filter: 'blur(0px)', scale: 1, y: 0 }}
+            transition={{
+                duration: 1.2,
+                delay: delay,
+                ease: [0.16, 1, 0.3, 1] // "Apple" Ease
             }}
         >
-            {text}.
-        </span>
+            {children}
+        </motion.div>
     );
 };
-
-const LiquidChar = ({ char, config }) => {
-    const defaultConfig = { y: -15, scaleY: 1.4, scaleX: 0.8, color: 'var(--color-orange)' };
-    const styles = config || defaultConfig;
-
-    return (
-        <motion.span
-            style={{ display: 'inline-block', position: 'relative' }}
-            whileHover={{
-                ...styles,
-                transition: { type: "spring", stiffness: 400, damping: 10 }
-            }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        >
-            {char === " " ? "\u00A0" : char}
-        </motion.span>
-    );
-};
-
-const LiquidText = ({ text, config }) => {
-    // Split by words to allow browser line-wrapping between words
-    const words = text.split(" ");
-    return (
-        <span style={{ display: 'inline' }}>
-            {words.map((word, wIndex) => (
-                <React.Fragment key={wIndex}>
-                    <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-                        {word.split('').map((char, cIndex) => (
-                            <LiquidChar key={cIndex} char={char} config={config} />
-                        ))}
-                    </span>
-                    {/* Add space between words */}
-                    {wIndex < words.length - 1 && " "}
-                </React.Fragment>
-            ))}
-        </span>
-    );
-};
-
-
 
 const Hero = () => {
-    // Custom Cursor Logic
-    // Initialize at center to match Preloader (approx) if window exists
-    const initialX = typeof window !== 'undefined' ? window.innerWidth / 2 : -100;
-    const initialY = typeof window !== 'undefined' ? window.innerHeight / 2 : -100;
-    const cursorX = useMotionValue(initialX);
-    const cursorY = useMotionValue(initialY);
-    const springConfig = { damping: 25, stiffness: 700 };
-    const cursorXSpring = useSpring(cursorX, springConfig);
-    const cursorYSpring = useSpring(cursorY, springConfig);
-    const [isHoveringHero, setIsHoveringHero] = useState(false);
+    const setGlobalTheme = useSectionColor();
 
-    useEffect(() => {
-        const moveCursor = (e) => {
-            cursorX.set(e.clientX);
-            cursorY.set(e.clientY);
-        };
-        window.addEventListener('mousemove', moveCursor);
-        return () => window.removeEventListener('mousemove', moveCursor);
-    }, []);
+    // Parallax logic
+    const { scrollY } = useScroll();
+    const y1 = useTransform(scrollY, [0, 500], [0, 200]);
 
     return (
-        <section
-            className="hero-section"
-            onMouseEnter={() => setIsHoveringHero(true)}
-            onMouseLeave={() => setIsHoveringHero(false)}
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#050507', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }} // Trigger slightly inwards
             style={{
-                minHeight: '100svh', // improved mobile height
+                minHeight: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'var(--color-black)',
+                padding: '8rem 2rem 4rem 2rem',
                 position: 'relative',
-                overflow: 'hidden',
-                cursor: 'none', // Hide default cursor
-                paddingTop: '0', // UPDATED: Removing nav clearance to let flex center properly (Nav is fixed/overlay?)
-                // If Nav is sticky/fixed, we need some top padding, but maybe less forces it down?
-                // Actually, if it's 'center', removing padding lets it float to true center.
-            }}
-        >
-            {/* Custom Logo Cursor */}
-            <motion.img
-                src={logo}
+                zIndex: 1,
+            }}>
+
+            {/* Hero-specific Ambient Light (The "Nice Effect") */}
+            <motion.div
+                animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.1, 1] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 style={{
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    width: '64px',
-                    height: '64px',
-                    translateX: cursorXSpring,
-                    translateY: cursorYSpring,
+                    position: 'absolute',
+                    top: '20%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: '600px',
+                    height: '600px',
+                    background: 'radial-gradient(circle, rgba(255, 119, 1, 0.05) 0%, transparent 70%)',
+                    borderRadius: '50%',
                     pointerEvents: 'none',
-                    zIndex: 9999,
-                    marginLeft: -32,
-                    marginTop: -32,
-                    opacity: isHoveringHero ? 1 : 0
+                    zIndex: -1
                 }}
             />
 
-            {/* AMBIENT VISUALS: Particles removed (Global now) */}
+            <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
 
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
-                className="container text-center"
-                style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    flex: 1, // Takes up all available space
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center', // Centers content vertically within this space
-                    alignItems: 'center'
-                }}
-            >
-                {/* METRIC SAFETY: Moved to Top (Eyebrow) to declutter flow */}
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    style={{ marginBottom: '1rem', display: 'inline-block', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', opacity: 0.7, color: 'var(--color-mint)' }}
-                >
-                    <LiquidText text="Serving 15+ founders across SaaS, tech, and venture" config={{ y: -5, scaleY: 1.2, scaleX: 0.9, color: 'var(--color-mint)' }} />
-                </motion.div>
+                {/* 1. Eyebrow - Cinematic Reveal */}
+                <CinematicReveal delay={0.2}>
+                    <div style={{
+                        marginBottom: '1.5rem',
+                        fontSize: '0.8rem',
+                        letterSpacing: '0.04em', // +4%
+                        textTransform: 'uppercase',
+                        color: 'var(--color-light-gray)',
+                        opacity: 0.7,
+                        fontWeight: 500,
+                        fontFamily: 'var(--font-body)'
+                    }}>
+                        Trusted by 15+ founders across SaaS, tech, and venture
+                    </div>
+                </CinematicReveal>
 
-                <h1 style={{ marginBottom: '2rem', lineHeight: 1.1 }}>
-                    <span style={{ color: '#fff' }}>
-                        <span className="font-sans text-xl" style={{ fontWeight: 700, letterSpacing: '-0.03em', display: 'inline-block' }}>
-                            <LiquidText text="We Engineer" />
-                        </span>
-                        {" "}
-                        <span className="font-serif" style={{ fontSize: 'clamp(3rem, 6vw, 6rem)', fontWeight: 400, lineHeight: 1.1, display: 'inline-block' }}>
-                            <GlitchWord />
-                        </span>
-                    </span>
-                </h1>
+                {/* 2. Headline - Cinematic Reveal */}
+                <CinematicReveal delay={0.4}>
+                    <h1 style={{
+                        marginBottom: '1.5rem',
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                        lineHeight: 1.15,
+                        color: '#fff',
+                        maxWidth: '960px',
+                        fontWeight: 400
+                    }}>
+                        We turn complex products into stories people actually <span style={{ color: 'var(--color-orange)', textShadow: '0 0 20px rgba(255, 119, 1, 0.3)' }}>understand and repeat.</span>
+                    </h1>
+                </CinematicReveal>
 
-                <div style={{ marginTop: '2rem', fontFamily: 'var(--font-body)', opacity: 0.9, maxWidth: '650px', marginInline: 'auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
-                    <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
-                        <LiquidText text="Back then, building something decent was enough." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} /><br />
-                        <LiquidText text="In 2019, your product just had to work. Fewer competitors. Slower cycles." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
+                {/* 3. Subheadline - Cinematic Reveal */}
+                <CinematicReveal delay={0.6}>
+                    <p style={{
+                        marginBottom: '3.5rem',
+                        fontSize: 'clamp(1.1rem, 2vw, 1.25rem)',
+                        lineHeight: 1.5,
+                        color: '#e0e0e0', // ~85% white
+                        maxWidth: '640px',
+                        fontFamily: 'var(--font-body)'
+                    }}>
+                        Marketing is <span className="highlight-orange" style={{ color: '#fff', fontWeight: 600 }}>applied psychology</span>. We work with founders to shape narrative, content, and distribution that triggers a response.
                     </p>
-                    <p style={{ marginBottom: '1.5rem', opacity: 0.7 }}>
-                        <LiquidText text="Today, anyone can launch a product in an afternoon with AI tools." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} /><br />
-                        <LiquidText text="But building a brand that stands out? That takes craft." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
-                    </p>
-                    <p style={{ marginBottom: '1.5rem', fontSize: '1.4rem', color: '#fff', fontWeight: 500, lineHeight: 1.3 }}>
-                        <LiquidText text="So how do you stand out now?" config={{ y: -20, scaleY: 1.4, scaleX: 0.8, color: 'var(--color-orange)' }} /><br />
-                        <LiquidText text="Story. Vision. Personality. Obsession." config={{ y: -20, scaleY: 1.4, scaleX: 0.8, color: 'var(--color-orange)' }} />
-                    </p>
-                    <p style={{ opacity: 0.9 }}>
-                        <LiquidText text="That's what spreads. That's what sticks." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} /><br />
-                        <LiquidText text="We help you build that." config={{ y: -15, scaleY: 1.3, scaleX: 0.85, color: '#fff' }} />
-                    </p>
-                </div>
-            </motion.div>
+                </CinematicReveal>
 
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 2, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-                style={{
-                    marginTop: 'auto', // Push to bottom naturally
-                    marginBottom: 'var(--spacing-md)',
-                    fontSize: '0.9rem',
-                    opacity: 0.6,
-                    zIndex: 1,
-                    cursor: 'pointer',
-                    letterSpacing: '0.5px'
-                }}
-                onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-                ↓ See our work
-            </motion.div>
-        </section>
+                {/* 4. Supporting Blocks - Cinematic Reveal */}
+                <CinematicReveal delay={0.8}>
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', // Responsive 3-col
+                        gap: '2.5rem',
+                        marginBottom: '3.5rem',
+                        maxWidth: '900px',
+                        textAlign: 'left'
+                    }}>
+                        {/* Block 1 */}
+                        <div>
+                            <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff', marginBottom: '0.5rem', fontFamily: 'var(--font-body)' }}>The problem</h4>
+                            <p style={{ fontSize: '0.95rem', lineHeight: 1.5, color: '#aaa' }}>
+                                Most good products die quietly because they are hard to explain and easy to ignore.
+                            </p>
+                        </div>
+
+                        {/* Block 2 */}
+                        <div>
+                            <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff', marginBottom: '0.5rem', fontFamily: 'var(--font-body)' }}>Our approach</h4>
+                            <p style={{ fontSize: '0.95rem', lineHeight: 1.5, color: '#aaa' }}>
+                                We extract the core idea and design a story that travels across content, teams, and channels.
+                            </p>
+                        </div>
+
+                        {/* Block 3 */}
+                        <div>
+                            <h4 style={{ fontSize: '0.9rem', fontWeight: 600, color: '#fff', marginBottom: '0.5rem', fontFamily: 'var(--font-body)' }}>Why it works</h4>
+                            <p style={{ fontSize: '0.95rem', lineHeight: 1.5, color: '#aaa' }}>
+                                We do not stop at making assets. We design how the story spreads.
+                            </p>
+                        </div>
+                    </div>
+                </CinematicReveal>
+
+                {/* 5. CTA - Cinematic Reveal */}
+                <CinematicReveal delay={1.0}>
+                    <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <a href="#work" onClick={(e) => { e.preventDefault(); document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }); }} style={{
+                            fontSize: '1rem',
+                            color: '#fff',
+                            borderBottom: '1px solid #fff',
+                            paddingBottom: '2px',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-body)'
+                        }}>
+                            See how this looks in practice ↓
+                        </a>
+
+                        <a href="https://calendly.com/manish-gensync/30min" target="_blank" rel="noopener noreferrer" style={{
+                            fontSize: '1rem',
+                            color: '#777',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            fontFamily: 'var(--font-body)'
+                        }}>
+                            Talk when you are serious
+                        </a>
+                    </div>
+                </CinematicReveal>
+
+            </div>
+        </motion.section>
     );
 };
 

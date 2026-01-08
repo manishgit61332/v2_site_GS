@@ -1,13 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 const Footer = () => {
+    const setGlobalTheme = useSectionColor();
     return (
-        <section id="contact" className="section-padding" style={{ backgroundColor: 'var(--color-pink)', color: 'var(--color-black)' }}>
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#000000', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }}
+            id="contact"
+            className="section-padding"
+            style={{ color: 'var(--color-white)', marginTop: '4rem' }}
+        >
             <div className="container text-center">
-                <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: 'var(--spacing-lg)', lineHeight: 1.1 }}>
-                    To seek attention is easy.<br />
-                    <span style={{ color: 'var(--color-white)' }}>To earn respect takes time.</span>
+                <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', marginBottom: 'var(--spacing-lg)', lineHeight: 1.1, color: '#fff' }}>
+                    You have a great product.<br />
+                    <span style={{ color: '#aaa' }}>Now give it the story it deserves.</span>
                 </h2>
 
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: 'var(--spacing-xl)' }}>
@@ -24,31 +32,17 @@ const Footer = () => {
                             cursor: 'pointer'
                         }}
                     >
-                        Start Your Story
+                        See the Models
                     </button>
-                    <button
-                        onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')}
-                        style={{
-                            padding: '1rem 2rem',
-                            fontSize: '1.1rem',
-                            border: '2px solid var(--color-black)',
-                            borderRadius: '50px',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Book a Strategy Call
-                    </button>
+
                 </div>
 
                 <motion.div
-                    style={{ padding: '2rem', borderTop: '1px solid rgba(0,0,0,0.1)', cursor: 'default' }}
-                    initial="hidden"
-                    whileHover="visible"
-                    animate="hidden"
-                    variants={{
-                        hidden: { opacity: 0.3, filter: 'blur(5px)' },
-                        visible: { opacity: 1, filter: 'blur(0px)' }
-                    }}
+                    style={{ padding: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', cursor: 'default' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
                 >
                     <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Ready to start?</p>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
@@ -62,7 +56,7 @@ const Footer = () => {
                     © {new Date().getFullYear()} Gensync. Designed by Gensync.
                 </p>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

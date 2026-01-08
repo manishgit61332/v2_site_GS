@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
+import { useSectionColor } from '../context/ScrollColorContext';
 
 const TestimonialCard = ({ role, quote, company }) => (
     <div
@@ -12,7 +13,7 @@ const TestimonialCard = ({ role, quote, company }) => (
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            minWidth: '350px', // Fixed width for marquee flow
+            minWidth: 'min(350px, 85vw)', // Responsive width for mobile
             height: '100%',
             marginRight: '2rem'
         }}
@@ -27,6 +28,8 @@ const TestimonialCard = ({ role, quote, company }) => (
 );
 
 const HallOfFame = () => {
+    const setGlobalTheme = useSectionColor();
+
     const testimonials = [
         {
             role: "Founder & CEO",
@@ -64,7 +67,12 @@ const HallOfFame = () => {
     const marqueeContent = [...testimonials, ...testimonials];
 
     return (
-        <section className="section-padding" style={{ backgroundColor: 'var(--color-black)', color: '#fff', overflow: 'hidden' }}>
+        <motion.section
+            onViewportEnter={() => setGlobalTheme('#000000', '#FFFFFF', 1.5)}
+            viewport={{ margin: "-10% 0px -10% 0px" }}
+            className="section-padding"
+            style={{ backgroundColor: 'transparent', color: '#fff', overflow: 'hidden' }}
+        >
             <div className="container">
                 <motion.div
                     initial={{ opacity: 0 }}
@@ -99,7 +107,7 @@ const HallOfFame = () => {
                     ))}
                 </motion.div>
             </div>
-        </section>
+        </motion.section>
     );
 };
 
