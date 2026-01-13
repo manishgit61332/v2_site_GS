@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -56,11 +56,27 @@ const SERVICES = [
     }
 ];
 
+// Hook for media query
+const useMediaQuery = (query) => {
+    const [matches, setMatches] = useState(false);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        const listener = () => setMatches(media.matches);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
+    }, [matches, query]);
+    return matches;
+};
+
 const CaseStudies = () => {
     const containerRef = useRef(null);
     const navigate = useNavigate();
     const setGlobalTheme = useSectionColor();
     const isVisible = useRef(false);
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -69,7 +85,7 @@ const CaseStudies = () => {
 
     const springScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-    // Horizontal Scroll Transformation
+    // Horizontal Scroll Transformation (Only valid on Desktop)
     const x = useTransform(springScroll, [0, 1], ["0%", "-85%"]);
 
     // BACKGROUND COLOR LOGIC
@@ -102,23 +118,33 @@ const CaseStudies = () => {
             onViewportLeave={() => isVisible.current = false}
             ref={containerRef}
             id="work"
-            style={{ height: '400vh', position: 'relative' }}
+            // Mobile: Auto height, Desktop: 400vh for scroll distance
+            style={{
+                height: isMobile ? 'auto' : '400vh',
+                position: 'relative',
+                marginBottom: isMobile ? '4rem' : 0
+            }}
         >
             <div style={{
-                position: 'sticky',
+                // Mobile: Normal flow, Desktop: Sticky
+                position: isMobile ? 'relative' : 'sticky',
                 top: 0,
-                height: '100vh',
+                // Mobile: Auto height, Desktop: 100vh viewport
+                height: isMobile ? 'auto' : '100vh',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                perspective: '1000px'
+                perspective: '1000px',
+                paddingTop: isMobile ? '4rem' : 0
             }}>
 
                 <h2 style={{
-                    position: 'absolute',
-                    top: '8vh',
-                    left: '5vw',
+                    position: isMobile ? 'relative' : 'absolute',
+                    top: isMobile ? 'auto' : '8vh',
+                    left: isMobile ? 'auto' : '5vw',
+                    marginBottom: isMobile ? '2rem' : 0,
+                    paddingLeft: isMobile ? '5vw' : 0,
                     fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                     fontFamily: 'var(--font-heading)',
                     lineHeight: 1,
@@ -130,48 +156,67 @@ const CaseStudies = () => {
                 </h2>
 
                 <motion.div style={{
-                    x,
+                    // Mobile: No transformation, Desktop: Horizontal scroll
+                    x: isMobile ? 0 : x,
                     display: 'flex',
-                    gap: '4vw',
+                    // Mobile: Vertical Column, Desktop: Horizontal Row
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? '2rem' : '4vw',
                     paddingLeft: '5vw',
-                    paddingRight: '60vw',
-                    alignItems: 'center',
-                    height: '100%',
-                    willChange: 'transform'
+                    paddingRight: isMobile ? '5vw' : '60vw',
+                    alignItems: isMobile ? 'stretch' : 'center',
+                    // Mobile: Auto height, Desktop: 100% to fill updated viewport
+                    height: isMobile ? 'auto' : '100%',
+                    willChange: isMobile ? 'auto' : 'transform'
                 }}>
                     {SERVICES.map((service, index) => (
-                        <ServiceCard key={service.id} service={service} navigate={navigate} globalProgress={springScroll} />
+                        <ServiceCard
+                            key={service.id}
+                            service={service}
+                            navigate={navigate}
+                            globalProgress={springScroll}
+                            isMobile={isMobile}
+                        />
                     ))}
                 </motion.div>
 
-                {/* Mobile Scroll Hint */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 1 }}
-                    style={{ position: 'absolute', bottom: '3rem', right: '5vw', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    Scroll <ArrowUpRight size={16} style={{ transform: 'rotate(45deg)' }} />
-                </motion.div>
+                {/* Mobile Scroll Hint - Only show on Desktop */}
+                {!isMobile && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1, duration: 1 }}
+                        style={{ position: 'absolute', bottom: '3rem', right: '5vw', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        Scroll <ArrowUpRight size={16} style={{ transform: 'rotate(45deg)' }} />
+                    </motion.div>
+                )}
 
             </div>
         </motion.section>
     );
 };
 
-const ServiceCard = ({ service, navigate, globalProgress }) => {
+const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
     // Parallax Logic: shift bg x based on global progress
-    // We can use a simple broad range since all cards move generally 0 to 1
-    const parallaxX = useTransform(globalProgress, [0, 1], ["0%", "20%"]);
+    // Updated: Centered range [-10%, 10%] to prevent clipping, coupled with scale 1.25.
+    const parallaxX = useTransform(globalProgress, [0, 1], ["-10%", "10%"]);
+
+    // Framer Motion Variants for smooth hover
+    const variants = {
+        initial: { scale: 1.25, filter: 'brightness(0.6) saturate(0.8)' },
+        hover: { scale: 1.35, filter: 'brightness(0.8) saturate(1.1)' } // Slightly larger scale on hover
+    };
 
     return (
         <motion.div
             onClick={() => navigate(`/service/${service.slug}`)}
-            className="group"
-            whileHover={{ scale: 0.98 }}
+            initial="initial"
+            whileHover="hover"
+            whileTap={{ scale: 0.98 }}
             style={{
-                width: '80vw',
+                width: isMobile ? '100%' : '80vw',
                 maxWidth: '600px',
-                height: '70vh',
+                height: isMobile ? '50vh' : '70vh',
                 maxHeight: '600px',
                 flexShrink: 0,
                 position: 'relative',
@@ -185,18 +230,22 @@ const ServiceCard = ({ service, navigate, globalProgress }) => {
         >
             {/* Image Background with Parallax */}
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-                <motion.div style={{
-                    position: 'absolute',
-                    inset: '-10%',
-                    backgroundImage: `url(${service.img})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: 'brightness(0.6) saturate(0.8)',
-                    x: parallaxX,
-                    scale: 1.15
-                }}
+                <motion.div
+                    style={{
+                        position: 'absolute',
+                        inset: '-10%',
+                        backgroundImage: `url(${service.img})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        // On mobile, we might want to disable parallaxX if it feels weird, but let's keep it subtle or disable.
+                        // Ideally, vertical parallax is better for mobile. 
+                        // For now, let's just keep horizontal parallax disabled on Mobile or use a fixed value.
+                        x: isMobile ? 0 : parallaxX,
+                        willChange: 'transform' // Performance optimization
+                    }}
+                    variants={variants}
+                    transition={{ duration: 0.4, ease: "easeOut" }} // Smooth transition
                     className="card-bg"
-                    transition={{ duration: 0.2 }}
                 />
             </div>
 
@@ -204,7 +253,7 @@ const ServiceCard = ({ service, navigate, globalProgress }) => {
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%)', pointerEvents: 'none' }} />
 
             {/* Content */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '3rem', boxSizing: 'border-box', pointerEvents: 'none' }}>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: isMobile ? '1.5rem' : '3rem', boxSizing: 'border-box', pointerEvents: 'none' }}>
                 <span style={{
                     display: 'inline-block',
                     marginBottom: '1rem',
@@ -221,7 +270,7 @@ const ServiceCard = ({ service, navigate, globalProgress }) => {
 
                 <h3 style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: '3rem',
+                    fontSize: isMobile ? '2rem' : '3rem',
                     color: '#fff',
                     margin: '0 0 0.5rem 0',
                     lineHeight: 1
@@ -231,7 +280,7 @@ const ServiceCard = ({ service, navigate, globalProgress }) => {
 
                 <p style={{
                     fontFamily: 'var(--font-body)',
-                    fontSize: '1.1rem',
+                    fontSize: isMobile ? '1rem' : '1.1rem',
                     color: 'rgba(255,255,255,0.7)',
                     maxWidth: '80%',
                     marginBottom: '2rem'
@@ -243,13 +292,6 @@ const ServiceCard = ({ service, navigate, globalProgress }) => {
                     View Case Study <ArrowUpRight size={18} />
                 </div>
             </div>
-
-            <style>{`
-                .group:hover .card-bg {
-                    filter: brightness(0.8) saturate(1.1) !important;
-                    transform: scale(1.2) !important;
-                }
-            `}</style>
         </motion.div>
     );
 };
