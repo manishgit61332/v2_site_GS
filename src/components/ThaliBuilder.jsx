@@ -1,8 +1,23 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Plus, X, Utensils, Info, Layout, PenTool, Video, Laptop, Megaphone, Smartphone, RefreshCw, Eye } from 'lucide-react';
+import { Plus, X, Utensils, Info, Layout, PenTool, Video, Laptop, Megaphone, Smartphone, RefreshCw, ChevronUp, ChevronDown } from 'lucide-react';
 import { useSectionColor } from '../context/ScrollColorContext';
+
+// Hook for media query
+const useMediaQuery = (query) => {
+    const [matches, setMatches] = useState(false);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        const listener = () => setMatches(media.matches);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
+    }, [matches, query]);
+    return matches;
+};
 
 // Services Data (Unchanged)
 const SERVICES = [
@@ -21,7 +36,7 @@ const SERVICES = [
 ];
 
 // --- 3D Tilt Card Component ---
-const TiltCard = ({ children, isSelected, onClick }) => {
+const TiltCard = ({ children, isSelected, onClick, isMobile }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
@@ -32,6 +47,7 @@ const TiltCard = ({ children, isSelected, onClick }) => {
     const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-5deg", "5deg"]);
 
     const handleMouseMove = (e) => {
+        if (isMobile) return;
         const rect = e.currentTarget.getBoundingClientRect();
         const width = rect.width;
         const height = rect.height;
@@ -44,6 +60,7 @@ const TiltCard = ({ children, isSelected, onClick }) => {
     };
 
     const handleMouseLeave = () => {
+        if (isMobile) return;
         x.set(0);
         y.set(0);
     };
@@ -51,18 +68,21 @@ const TiltCard = ({ children, isSelected, onClick }) => {
     return (
         <motion.div
             style={{
-                rotateX,
-                rotateY,
+                rotateX: isMobile ? 0 : rotateX,
+                rotateY: isMobile ? 0 : rotateY,
                 transformStyle: "preserve-3d",
                 perspective: 1000,
+                // On mobile, ensure it feels tappable
+                touchAction: 'manipulation'
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
-            whileHover={{ scale: 1.02, zIndex: 10 }}
+            whileHover={!isMobile ? { scale: 1.02, zIndex: 10 } : {}}
+            whileTap={{ scale: 0.98 }}
             className="tilt-card-wrapper"
         >
-            <div style={{ transform: "translateZ(20px)" }}>
+            <div style={{ transform: isMobile ? "none" : "translateZ(20px)" }}>
                 {children}
             </div>
             {/* Shimmer Effect on Select */}
@@ -89,7 +109,6 @@ const TiltCard = ({ children, isSelected, onClick }) => {
 
 // --- Animated Counter for Price ---
 const AnimatedPrice = ({ value }) => {
-    // A simplified spring animation for the number
     return (
         <motion.span
             key={value}
@@ -107,7 +126,8 @@ const ThaliBuilder = () => {
     const navigate = useNavigate();
     const setGlobalTheme = useSectionColor();
     const [selectedIds, setSelectedIds] = useState([]);
-    const [showHint, setShowHint] = useState(false);
+    const isMobile = useMediaQuery('(max-width: 900px)');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const toggleService = (id) => {
         setSelectedIds(prev =>
@@ -134,6 +154,8 @@ const ThaliBuilder = () => {
                 color: 'var(--color-white)',
                 position: 'relative',
                 paddingTop: 'var(--spacing-xl)',
+                // Add padding bottom on mobile to account for sticky bar
+                paddingBottom: isMobile ? '180px' : 'var(--spacing-xl)',
                 borderTop: 'none'
             }}>
 
@@ -144,25 +166,37 @@ const ThaliBuilder = () => {
                     <div style={{
                         display: 'flex', alignItems: 'center', gap: '0.5rem',
                         color: '#D4AF37', fontSize: '0.9rem', opacity: 0.9,
-                        backgroundColor: 'rgba(212, 175, 55, 0.1)', padding: '0.5rem 1rem', borderRadius: '50px'
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)', padding: '0.5rem 1rem', borderRadius: '50px',
+                        textAlign: 'center'
                     }}>
-                        <Info size={16} />
+                        <Info size={16} style={{ flexShrink: 0 }} />
                         <span>A <strong>Thali</strong> is a custom platter of services. Pick exactly what you need.</span>
                     </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 380px', gap: 'var(--spacing-md)', alignItems: 'start' }} className="thali-grid">
+                <div style={{
+                    // Desktop: Grid with sidebar. Mobile: Single column.
+                    display: isMobile ? 'block' : 'grid',
+                    gridTemplateColumns: 'minmax(0, 1fr) 380px',
+                    gap: 'var(--spacing-md)',
+                    alignItems: 'start'
+                }}>
 
                     {/* Menu Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem', alignContent: 'start' }}>
+                    <div style={{
+                        display: 'grid',
+                        // Responsive card sizing
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                        gap: '1.5rem',
+                        alignContent: 'start'
+                    }}>
                         {SERVICES.map(service => {
                             const isSelected = selectedIds.includes(service.id);
                             return (
-                                <TiltCard key={service.id} isSelected={isSelected} onClick={() => toggleService(service.id)}>
+                                <TiltCard key={service.id} isSelected={isSelected} onClick={() => toggleService(service.id)} isMobile={isMobile}>
                                     <div style={{
                                         padding: '1.5rem',
                                         borderRadius: '16px',
-                                        // Green Border Glow on selection, else subtle border
                                         border: isSelected ? '1px solid #D4AF37' : '1px solid rgba(255,255,255,0.05)',
                                         boxShadow: isSelected ? '0 0 15px rgba(212,175,55,0.3)' : 'none',
                                         cursor: 'pointer',
@@ -210,130 +244,188 @@ const ThaliBuilder = () => {
                         })}
                     </div>
 
-                    {/* The Plate / Receipt / Preview (Floating Glassmorphism) */}
-                    <div className="desktop-preview-panel" style={{ position: 'sticky', top: '100px', zIndex: 900 }}>
-                        <motion.div
-                            initial={{ y: 20, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                            style={{
-                                backgroundColor: 'rgba(20, 20, 20, 0.6)', // Dark glass
-                                backdropFilter: 'blur(20px)',
-                                WebkitBackdropFilter: 'blur(20px)',
-                                color: '#fff',
-                                padding: '2rem',
-                                borderRadius: '24px',
-                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                                border: '1px solid rgba(212, 175, 55, 0.2)',
-                                position: 'relative',
-                                overflow: 'hidden'
-                            }}>
-                            {/* Glass Reflection */}
-                            <div style={{
-                                position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-                                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)'
-                            }} />
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
-                                <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(212,175,55,0.1)' }}>
-                                    <Utensils size={20} color="#D4AF37" />
-                                </div>
-                                <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-heading)', margin: 0 }}>Your Plate</h3>
-                            </div>
-
-                            <div style={{ minHeight: '150px', marginBottom: '2rem' }}>
-                                <AnimatePresence mode="popLayout" initial={false}>
-                                    {selectedIds.length === 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            style={{
-                                                height: '150px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                                                border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: '#666'
-                                            }}
-                                        >
-                                            <p style={{ margin: 0, fontSize: '0.9rem' }}>Your plate is empty</p>
-                                        </motion.div>
-                                    )}
-                                    {SERVICES.filter(s => selectedIds.includes(s.id)).map(s => (
-                                        <motion.div
-                                            key={s.id}
-                                            layout
-                                            initial={{ opacity: 0, x: -20, height: 0 }}
-                                            animate={{ opacity: 1, x: 0, height: 'auto' }}
-                                            exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0 }}
-                                            style={{
-                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                                marginBottom: '0.5rem'
-                                            }}
-                                        >
-                                            <span style={{ fontSize: '0.95rem' }}>{s.name}</span>
-                                            <span style={{ color: '#D4AF37', fontWeight: '500' }}>${s.price.toLocaleString()}</span>
-                                        </motion.div>
-                                    ))}
-                                </AnimatePresence>
-                            </div>
-
-                            <div style={{ paddingTop: '1.5rem', borderTop: '2px solid rgba(255,255,255,0.1)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '1.2rem', alignItems: 'center' }}>
-                                    <span style={{ opacity: 0.8 }}>Total</span>
-                                    <strong style={{ fontSize: '1.5rem', color: '#D4AF37' }}>
-                                        <AnimatedPrice value={totalBudget} />
-                                    </strong>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', opacity: 0.6 }}>
-                                    <span>Est. Timeline</span>
-                                    <span>~{totalTime} Days</span>
-                                </div>
-                            </div>
-
-                            <motion.button
-                                onClick={() => {
-                                    const selected = SERVICES.filter(s => selectedIds.includes(s.id));
-                                    navigate('/checkout', { state: { selectedServices: selected, totalBudget } });
-                                }}
-                                disabled={totalBudget === 0}
-                                animate={{
-                                    scale: totalBudget > 0 ? [1, 1.02, 1] : 1,
-                                    borderColor: totalBudget > 0 ? ['#D4AF37', '#fff', '#D4AF37'] : '#333'
-                                }}
-                                transition={{ repeat: totalBudget > 0 ? Infinity : 0, duration: 2, ease: "easeInOut" }}
-                                style={{
-                                    width: '100%',
-                                    backgroundColor: totalBudget > 0 ? '#D4AF37' : 'rgba(255,255,255,0.05)',
-                                    color: totalBudget > 0 ? '#000' : '#666',
-                                    padding: '1.1rem',
-                                    borderRadius: '12px',
-                                    marginTop: '2rem',
-                                    fontSize: '1rem',
-                                    fontWeight: 600,
-                                    border: totalBudget > 0 ? '1px solid #D4AF37' : '1px solid transparent',
-                                    cursor: totalBudget > 0 ? 'pointer' : 'not-allowed',
-                                    opacity: totalBudget > 0 ? 1 : 0.7,
-                                    transition: 'background-color 0.3s'
-                                }}>
-                                {totalBudget > 0 ? 'Book This Thali' : 'Select Items'}
-                            </motion.button>
-                        </motion.div>
-                    </div>
+                    {/* Desktop: Sidebar Receipt */}
+                    {!isMobile && (
+                        <div className="desktop-preview-panel" style={{ position: 'sticky', top: '100px', zIndex: 900 }}>
+                            <ReceiptPanel
+                                selectedIds={selectedIds}
+                                totalBudget={totalBudget}
+                                totalTime={totalTime}
+                                navigate={navigate}
+                            />
+                        </div>
+                    )}
 
                 </div>
             </div>
-            <style>{`
-                    .tilt-card-wrapper {
-                         /* Required for 3D tilt context if not handled by motion component directly */
-                    }
-                    @media (max-width: 900px) {
-                        .thali-grid { 
-                            grid-template-columns: 1fr !important;
-                            display: flex !important;
-                            flex-direction: column; 
-                        }
-                    }
-                `}</style>
+
+            {/* Mobile: Sticky Bottom Bar */}
+            {isMobile && (
+                <motion.div
+                    initial={{ y: 100 }}
+                    animate={{ y: 0 }}
+                    style={{
+                        position: 'fixed',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        backgroundColor: '#111',
+                        borderTop: '1px solid rgba(212, 175, 55, 0.3)',
+                        padding: '1rem',
+                        zIndex: 1000,
+                        boxShadow: '0 -10px 30px rgba(0,0,0,0.8)'
+                    }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <div>
+                            <span style={{ fontSize: '0.8rem', color: '#888', textTransform: 'uppercase', marginRight: '0.5rem' }}>Total</span>
+                            <span style={{ fontSize: '1.5rem', color: '#D4AF37', fontWeight: 'bold' }}>
+                                <AnimatedPrice value={totalBudget} />
+                            </span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: '#ccc' }}>
+                            ~{totalTime} Days
+                        </div>
+                    </div>
+
+                    <motion.button
+                        onClick={() => {
+                            const selected = SERVICES.filter(s => selectedIds.includes(s.id));
+                            navigate('/checkout', { state: { selectedServices: selected, totalBudget } });
+                        }}
+                        disabled={totalBudget === 0}
+                        animate={{
+                            scale: totalBudget > 0 ? [1, 1.02, 1] : 1,
+                        }}
+                        transition={{ repeat: totalBudget > 0 ? Infinity : 0, duration: 2 }}
+                        style={{
+                            width: '100%',
+                            backgroundColor: totalBudget > 0 ? '#D4AF37' : '#222',
+                            color: totalBudget > 0 ? '#000' : '#555',
+                            padding: '1rem',
+                            borderRadius: '8px',
+                            fontWeight: 600,
+                            border: 'none',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        {totalBudget > 0 ? 'Book This Thali' : 'Select Items'}
+                    </motion.button>
+                </motion.div>
+            )}
+
         </motion.section>
+    );
+};
+
+// Extracted for cleanliness
+const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, navigate }) => {
+    return (
+        <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            style={{
+                backgroundColor: 'rgba(20, 20, 20, 0.6)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                color: '#fff',
+                padding: '2rem',
+                borderRadius: '24px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                border: '1px solid rgba(212, 175, 55, 0.2)',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+            {/* Glass Reflection */}
+            <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)'
+            }} />
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
+                <div style={{ padding: '0.5rem', borderRadius: '8px', background: 'rgba(212,175,55,0.1)' }}>
+                    <Utensils size={20} color="#D4AF37" />
+                </div>
+                <h3 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-heading)', margin: 0 }}>Your Plate</h3>
+            </div>
+
+            <div style={{ minHeight: '150px', marginBottom: '2rem' }}>
+                <AnimatePresence mode="popLayout" initial={false}>
+                    {selectedIds.length === 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            style={{
+                                height: '150px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                                border: '2px dashed rgba(255,255,255,0.1)', borderRadius: '12px', color: '#666'
+                            }}
+                        >
+                            <p style={{ margin: 0, fontSize: '0.9rem' }}>Your plate is empty</p>
+                        </motion.div>
+                    )}
+                    {SERVICES.filter(s => selectedIds.includes(s.id)).map(s => (
+                        <motion.div
+                            key={s.id}
+                            layout
+                            initial={{ opacity: 0, x: -20, height: 0 }}
+                            animate={{ opacity: 1, x: 0, height: 'auto' }}
+                            exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0 }}
+                            style={{
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                padding: '0.75rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)',
+                                marginBottom: '0.5rem'
+                            }}
+                        >
+                            <span style={{ fontSize: '0.95rem' }}>{s.name}</span>
+                            <span style={{ color: '#D4AF37', fontWeight: '500' }}>${s.price.toLocaleString()}</span>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </div>
+
+            <div style={{ paddingTop: '1.5rem', borderTop: '2px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '1.2rem', alignItems: 'center' }}>
+                    <span style={{ opacity: 0.8 }}>Total</span>
+                    <strong style={{ fontSize: '1.5rem', color: '#D4AF37' }}>
+                        <AnimatedPrice value={totalBudget} />
+                    </strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', opacity: 0.6 }}>
+                    <span>Est. Timeline</span>
+                    <span>~{totalTime} Days</span>
+                </div>
+            </div>
+
+            <motion.button
+                onClick={() => {
+                    const selected = SERVICES.filter(s => selectedIds.includes(s.id));
+                    navigate('/checkout', { state: { selectedServices: selected, totalBudget } });
+                }}
+                disabled={totalBudget === 0}
+                animate={{
+                    scale: totalBudget > 0 ? [1, 1.02, 1] : 1,
+                    borderColor: totalBudget > 0 ? ['#D4AF37', '#fff', '#D4AF37'] : '#333'
+                }}
+                transition={{ repeat: totalBudget > 0 ? Infinity : 0, duration: 2, ease: "easeInOut" }}
+                style={{
+                    width: '100%',
+                    backgroundColor: totalBudget > 0 ? '#D4AF37' : 'rgba(255,255,255,0.05)',
+                    color: totalBudget > 0 ? '#000' : '#666',
+                    padding: '1.1rem',
+                    borderRadius: '12px',
+                    marginTop: '2rem',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    border: totalBudget > 0 ? '1px solid #D4AF37' : '1px solid transparent',
+                    cursor: totalBudget > 0 ? 'pointer' : 'not-allowed',
+                    opacity: totalBudget > 0 ? 1 : 0.7,
+                    transition: 'background-color 0.3s'
+                }}>
+                {totalBudget > 0 ? 'Book This Thali' : 'Select Items'}
+            </motion.button>
+        </motion.div>
     );
 };
 

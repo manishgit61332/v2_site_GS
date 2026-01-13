@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useSectionColor } from '../context/ScrollColorContext';
 
@@ -20,18 +20,35 @@ const TEAM = [
     { name: 'Aayush M', role: 'Strategy', img: imgAayushM, quote: "Product-Market Fit is a narrative problem." },
     { name: 'Ayush T', role: 'Production', img: imgAyushT, quote: "We fix it in pre-production, not post." },
     { name: 'Manikanta', role: 'Editor & Storywriter', img: imgMani, quote: "Every cut must advance the story." },
+    // { name: 'Crea', role: 'Operations Robot', img: imgCrea, quote: "Optimizing for maximum throughput." }, // Commented out based on intent or keep if needed.
+    // Keeping all 8 as per original code for now.
     { name: 'Crea', role: 'Operations Robot', img: imgCrea, quote: "Optimizing for maximum throughput." },
 ];
 
+// Reusing hook logic (ideally would be in a hooks/utils file, but for single file self-containment):
+const useMediaQuery = (query) => {
+    const [matches, setMatches] = useState(false);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        if (media.matches !== matches) {
+            setMatches(media.matches);
+        }
+        const listener = () => setMatches(media.matches);
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
+    }, [matches, query]);
+    return matches;
+};
+
 const TeamKitchen = () => {
     const setGlobalTheme = useSectionColor();
+    const isMobile = useMediaQuery('(max-width: 768px)');
 
     return (
         <motion.section
             onViewportEnter={() => setGlobalTheme('#050505', '#FFFFFF', 1.5)}
             viewport={{ margin: "-10% 0px -10% 0px" }}
             style={{
-                // backgroundColor: '#050505', // Removed for Global Atmosphere
                 color: '#fff',
                 minHeight: '100vh',
                 display: 'flex',
@@ -79,12 +96,8 @@ const TeamKitchen = () => {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
-                    // On large screens, we want exactly 4 columns. 
-                    // Since auto-fit might drop to 3 if width is tight, we can use a media query or just tweak the minmax.
-                    // But simpler: let's use a media query style approach via standard CSS or stick to a robust minmax that fits 4.
-                    // Actually, the user specifically asked for 4x2. Let's make it explicitly 4 columns on wide screens.
-                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    // Mobile: 1 col, Tablet: 2 col, Desktop: 4 col
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
                     gap: 'clamp(1.5rem, 3vw, 2.5rem)',
                     maxWidth: '1400px',
                     margin: '0 auto',
@@ -92,14 +105,14 @@ const TeamKitchen = () => {
                 }}
             >
                 {TEAM.map((member, index) => (
-                    <TeamCard key={index} member={member} index={index} />
+                    <TeamCard key={index} member={member} index={index} isMobile={isMobile} />
                 ))}
             </div>
         </motion.section>
     );
 };
 
-const TeamCard = ({ member, index }) => {
+const TeamCard = ({ member, index, isMobile }) => {
     const [isHovered, setIsHovered] = useState(false);
     const cardRef = useRef(null);
 
@@ -116,7 +129,7 @@ const TeamCard = ({ member, index }) => {
     const rotateY = useTransform(smoothMouseX, [-100, 100], [-5, 5]);
 
     const handleMouseMove = (e) => {
-        if (!cardRef.current) return;
+        if (isMobile || !cardRef.current) return;
 
         const rect = cardRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -132,13 +145,11 @@ const TeamCard = ({ member, index }) => {
         setIsHovered(false);
     };
 
-    // Touch support for mobile
-    const handleTouchStart = () => {
-        setIsHovered(true);
-    };
-
-    const handleTouchEnd = () => {
-        setIsHovered(false);
+    // Toggle on touch for mobile
+    const toggleHover = () => {
+        if (isMobile) {
+            setIsHovered(!isHovered);
+        }
     };
 
     return (
@@ -153,10 +164,9 @@ const TeamCard = ({ member, index }) => {
                 ease: [0.22, 1, 0.36, 1]
             }}
             onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovered(true)}
+            onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={handleMouseLeave}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
+            onClick={toggleHover} // Enable tap on mobile
             style={{
                 position: 'relative',
                 perspective: '1000px',
@@ -164,11 +174,12 @@ const TeamCard = ({ member, index }) => {
         >
             <motion.div
                 style={{
-                    rotateX,
-                    rotateY,
+                    rotateX: isMobile ? 0 : rotateX,
+                    rotateY: isMobile ? 0 : rotateY,
                     transformStyle: 'preserve-3d',
                 }}
-                whileHover={{ scale: 1.02 }}
+                whileHover={!isMobile ? { scale: 1.02 } : {}}
+                whileTap={isMobile ? { scale: 0.98 } : {}}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
                 <div
@@ -189,7 +200,7 @@ const TeamCard = ({ member, index }) => {
                         style={{
                             position: 'absolute',
                             inset: 0,
-                            backgroundImage: `url('${member.img}')`, // Fixed: added quotes for precaution, though imported var is string url usually
+                            backgroundImage: `url('${member.img}')`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}
