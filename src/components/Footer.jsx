@@ -32,7 +32,7 @@ const Footer = () => {
                             cursor: 'pointer'
                         }}
                     >
-                        See the Models
+                        Start Building
                     </button>
 
                 </div>

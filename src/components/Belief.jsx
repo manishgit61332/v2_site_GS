@@ -8,14 +8,15 @@ const Belief = () => {
     return (
         <motion.section
             onViewportEnter={() => {
-                console.log("Belief ENTERED. Setting GLOBAL THEME to Mint/Black.");
-                setGlobalTheme('#E3FFEB', '#050507', 1.5);
+                // Background is now handled by GlobalAtmosphere interpolation (Dark Forest Green region)
+                // Text must be white to be visible.
+                setGlobalTheme('#0a1a0a', '#FFFFFF', 1.5);
             }}
             viewport={{ margin: "-20% 0px -20% 0px" }}
             className="section-padding"
             style={{
                 backgroundColor: 'transparent',
-                color: 'var(--color-black)',
+                color: 'var(--color-white)', // Default to white
                 minHeight: '80vh',
                 display: 'flex',
                 alignItems: 'center',
@@ -41,7 +42,7 @@ const Belief = () => {
                     </p>
 
                     {/* PROOF POINTS - Dark border for mint bg */}
-                    <div style={{ display: 'flex', gap: 'var(--spacing-md)', alignItems: 'center', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '2rem' }}>
+                    <div style={{ display: 'flex', gap: 'var(--spacing-md)', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '2rem' }}>
                         <div>
                             <div className="text-xl font-heading" style={{ lineHeight: 1 }}>23M+</div>
                             <div className="text-sm font-sans" style={{ opacity: 0.6, marginTop: '0.5rem' }}>Organic Views Delivered</div>

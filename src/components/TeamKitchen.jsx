@@ -3,20 +3,24 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useSectionColor } from '../context/ScrollColorContext';
 
 // Import images
-import team1 from '../assets/team_cutout_1.png';
-import team2 from '../assets/team_cutout_2.png';
-import team3 from '../assets/team_cutout_3.png';
-import team4 from '../assets/team_cutout_4.png';
+import imgManish from '../assets/team/Manish.jpeg';
+import imgAmulya from '../assets/team/Amulya.jpeg';
+import imgAyushS from '../assets/team/Ayush S.jpeg';
+import imgMohit from '../assets/team/Mohit.jpeg';
+import imgAayushM from '../assets/team/Aayush Mohan.jpeg';
+import imgAyushT from '../assets/team/Ayush T.jpg';
+import imgMani from '../assets/team/Mani Kanta.jpeg';
+import imgCrea from '../assets/team/Crea.jpeg';
 
 const TEAM = [
-    { name: 'Manish', role: 'Head Chef', img: team1, quote: "If I can't explain it in one sentence, it's not done." },
-    { name: 'Amulya', role: 'Visual Lead', img: team2, quote: "Ugly converts, but beautiful endures." },
-    { name: 'Ayush S', role: 'Acquisition', img: team3, quote: "Traffic is vanity. Conversion is sanity." },
-    { name: 'Mohit', role: 'Operations', img: team4, quote: "Creativity without deadlines is just a dream." },
-    { name: 'Aayush M', role: 'Strategy', img: team1, quote: "Product-Market Fit is a narrative problem." },
-    { name: 'Ayush T', role: 'Production', img: team4, quote: "We fix it in pre-production, not post." },
-    { name: 'Manikanta', role: 'Editor & Storywriter', img: team3, quote: "Every cut must advance the story." },
-    { name: 'Crea', role: 'Operations Robot', img: team2, quote: "Optimizing for maximum throughput." },
+    { name: 'Manish', role: 'Head Chef', img: imgManish, quote: "If I can't explain it in one sentence, it's not done." },
+    { name: 'Amulya', role: 'Visual Lead', img: imgAmulya, quote: "Ugly converts, but beautiful endures." },
+    { name: 'Ayush S', role: 'Acquisition', img: imgAyushS, quote: "Traffic is vanity. Conversion is sanity." },
+    { name: 'Mohit', role: 'Operations', img: imgMohit, quote: "Creativity without deadlines is just a dream." },
+    { name: 'Aayush M', role: 'Strategy', img: imgAayushM, quote: "Product-Market Fit is a narrative problem." },
+    { name: 'Ayush T', role: 'Production', img: imgAyushT, quote: "We fix it in pre-production, not post." },
+    { name: 'Manikanta', role: 'Editor & Storywriter', img: imgMani, quote: "Every cut must advance the story." },
+    { name: 'Crea', role: 'Operations Robot', img: imgCrea, quote: "Optimizing for maximum throughput." },
 ];
 
 const TeamKitchen = () => {
@@ -185,7 +189,7 @@ const TeamCard = ({ member, index }) => {
                         style={{
                             position: 'absolute',
                             inset: 0,
-                            backgroundImage: `url(${member.img})`,
+                            backgroundImage: `url('${member.img}')`, // Fixed: added quotes for precaution, though imported var is string url usually
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}

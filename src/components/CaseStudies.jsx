@@ -70,11 +70,11 @@ const CaseStudies = () => {
     const springScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
     // Horizontal Scroll Transformation
-    const x = useTransform(springScroll, [0, 1], ["0%", "-75%"]);
+    const x = useTransform(springScroll, [0, 1], ["0%", "-85%"]);
 
     // BACKGROUND COLOR LOGIC
     useMotionValueEvent(springScroll, "change", (latest) => {
-        if (!isVisible.current || latest > 0.99) { // Simple guard
+        if (!isVisible.current || latest > 0.99) {
             return;
         }
 
@@ -86,8 +86,6 @@ const CaseStudies = () => {
 
         const stepStart = activeIndex * stepSize;
         const linearProgress = (latest - stepStart) / stepSize;
-
-        // Use simple linear interpolation to be safe (OG behavior)
         const localProgress = linearProgress;
 
         const currentColor = SERVICES[activeIndex].bg;
@@ -106,55 +104,72 @@ const CaseStudies = () => {
             id="work"
             style={{ height: '400vh', position: 'relative' }}
         >
-            <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{
+                position: 'sticky',
+                top: 0,
+                height: '100vh',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                perspective: '1000px'
+            }}>
 
                 <h2 style={{
                     position: 'absolute',
-                    top: '5vh',
+                    top: '8vh',
                     left: '5vw',
-                    fontSize: 'clamp(2rem, 4vw, 3rem)',
+                    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                     fontFamily: 'var(--font-heading)',
                     lineHeight: 1,
                     color: '#fff',
-                    zIndex: 10
+                    zIndex: 10,
+                    mixBlendMode: 'difference'
                 }}>
                     Selected Work.
                 </h2>
 
-                <motion.div style={{ x, display: 'flex', gap: '4vw', paddingLeft: '5vw', paddingRight: '10vw', alignItems: 'center', height: '100%', willChange: 'transform' }}>
+                <motion.div style={{
+                    x,
+                    display: 'flex',
+                    gap: '4vw',
+                    paddingLeft: '5vw',
+                    paddingRight: '60vw',
+                    alignItems: 'center',
+                    height: '100%',
+                    willChange: 'transform'
+                }}>
                     {SERVICES.map((service, index) => (
-                        <ServiceCard key={service.id} service={service} navigate={navigate} />
+                        <ServiceCard key={service.id} service={service} navigate={navigate} globalProgress={springScroll} />
                     ))}
                 </motion.div>
 
-                {/* Mobile Scroll Hint / Design Element */}
-                <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
-                    Scroll to Explore
-                </div>
+                {/* Mobile Scroll Hint */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 1 }}
+                    style={{ position: 'absolute', bottom: '3rem', right: '5vw', color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    Scroll <ArrowUpRight size={16} style={{ transform: 'rotate(45deg)' }} />
+                </motion.div>
 
             </div>
-
-            {/* Mobile Fallback (CSS) */}
-            <style>{`
-                @media(max-width: 768px) {
-                    /* On mobile, we might want to disable the sticky scroll and just show a vertical list? 
-                       For now, keeping the horizontal scroll as it is often preferred even on mobile for portfolios 
-                       BUT 'sticky' requires height. If we want simple vertical on mobile:
-                    */
-                }
-            `}</style>
         </motion.section>
     );
 };
 
-const ServiceCard = ({ service, navigate }) => {
+const ServiceCard = ({ service, navigate, globalProgress }) => {
+    // Parallax Logic: shift bg x based on global progress
+    // We can use a simple broad range since all cards move generally 0 to 1
+    const parallaxX = useTransform(globalProgress, [0, 1], ["0%", "20%"]);
+
     return (
         <motion.div
             onClick={() => navigate(`/service/${service.slug}`)}
             className="group"
             whileHover={{ scale: 0.98 }}
             style={{
-                width: '80vw',      // Big wide cards
+                width: '80vw',
                 maxWidth: '600px',
                 height: '70vh',
                 maxHeight: '600px',
@@ -168,22 +183,28 @@ const ServiceCard = ({ service, navigate }) => {
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
             }}
         >
-            {/* Image Background */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: `url(${service.img})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: 'brightness(0.6) saturate(0.8)',
-                transition: 'filter 0.5s ease, transform 0.7s ease'
-            }} className="card-bg" />
+            {/* Image Background with Parallax */}
+            <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+                <motion.div style={{
+                    position: 'absolute',
+                    inset: '-10%',
+                    backgroundImage: `url(${service.img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'brightness(0.6) saturate(0.8)',
+                    x: parallaxX,
+                    scale: 1.15
+                }}
+                    className="card-bg"
+                    transition={{ duration: 0.2 }}
+                />
+            </div>
 
             {/* Gradient Overlay */}
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%)', pointerEvents: 'none' }} />
 
             {/* Content */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '3rem', boxSizing: 'border-box' }}>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '3rem', boxSizing: 'border-box', pointerEvents: 'none' }}>
                 <span style={{
                     display: 'inline-block',
                     marginBottom: '1rem',
@@ -226,7 +247,7 @@ const ServiceCard = ({ service, navigate }) => {
             <style>{`
                 .group:hover .card-bg {
                     filter: brightness(0.8) saturate(1.1) !important;
-                    transform: scale(1.05) !important;
+                    transform: scale(1.2) !important;
                 }
             `}</style>
         </motion.div>
@@ -234,4 +255,3 @@ const ServiceCard = ({ service, navigate }) => {
 };
 
 export default CaseStudies;
-

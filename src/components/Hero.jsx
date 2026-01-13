@@ -143,28 +143,41 @@ const Hero = () => {
                     </div>
                 </CinematicReveal>
 
-                {/* 5. CTA - Cinematic Reveal */}
+                {/* 5. CTA - Cinematic Reveal - UPDATED */}
                 <CinematicReveal delay={1.0}>
                     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <a href="#work" onClick={(e) => { e.preventDefault(); document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }); }} style={{
-                            fontSize: '1rem',
-                            color: '#fff',
-                            borderBottom: '1px solid #fff',
-                            paddingBottom: '2px',
-                            cursor: 'pointer',
-                            fontFamily: 'var(--font-body)'
-                        }}>
-                            See how this looks in practice ↓
-                        </a>
 
+                        {/* PRIMARY CTA - Calendly */}
                         <a href="https://calendly.com/manish-gensync/30min" target="_blank" rel="noopener noreferrer" style={{
                             fontSize: '1rem',
-                            color: '#777',
+                            color: '#000',
+                            backgroundColor: '#fff',
+                            padding: '1rem 2rem',
+                            borderRadius: '50px',
+                            fontWeight: 600,
                             cursor: 'pointer',
                             textDecoration: 'none',
-                            fontFamily: 'var(--font-body)'
+                            fontFamily: 'var(--font-body)',
+                            transition: 'transform 0.2s ease',
+                            border: '1px solid #fff'
+                        }}
+                            onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+                            onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+                        >
+                            Book a Discovery Call
+                        </a>
+
+                        {/* SECONDARY CTA - Anchor */}
+                        <a href="#work" onClick={(e) => { e.preventDefault(); document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' }); }} style={{
+                            fontSize: '1rem',
+                            color: '#aaa',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            fontFamily: 'var(--font-body)',
+                            borderBottom: '1px solid rgba(255,255,255,0.2)',
+                            paddingBottom: '2px'
                         }}>
-                            Talk when you are serious
+                            View Selected Work
                         </a>
                     </div>
                 </CinematicReveal>
@@ -175,4 +188,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
