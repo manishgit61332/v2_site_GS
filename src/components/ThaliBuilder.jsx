@@ -259,8 +259,8 @@ const ThaliBuilder = () => {
                 </div>
             </div>
 
-            {/* Mobile: Sticky Bottom Bar */}
-            {isMobile && (
+            {/* Mobile: Sticky Bottom Bar - Only show when items are selected */}
+            {isMobile && totalBudget > 0 && (
                 <motion.div
                     initial={{ y: 100 }}
                     animate={{ y: 0 }}
