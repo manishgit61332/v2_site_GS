@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Added Link
 import { Plus, X, Utensils, Info, Layout, PenTool, Video, Laptop, Megaphone, Smartphone, RefreshCw, ChevronUp, ChevronDown } from 'lucide-react';
 import { useSectionColor } from '../context/ScrollColorContext';
 
@@ -143,6 +143,10 @@ const ThaliBuilder = () => {
         };
     }, [selectedIds]);
 
+    // Use filtering logic for Link state also
+    const selectedServicesList = useMemo(() => SERVICES.filter(s => selectedIds.includes(s.id)), [selectedIds]);
+
+
     return (
         <motion.section
             onViewportEnter={() => setGlobalTheme('#0a1f0a', '#FFFFFF', 1.5)}
@@ -251,7 +255,7 @@ const ThaliBuilder = () => {
                                 selectedIds={selectedIds}
                                 totalBudget={totalBudget}
                                 totalTime={totalTime}
-                                navigate={navigate}
+                                selectedServices={selectedServicesList} // Pass pre-calculated list
                             />
                         </div>
                     )}
@@ -288,29 +292,25 @@ const ThaliBuilder = () => {
                         </div>
                     </div>
 
-                    <motion.button
-                        onClick={() => {
-                            const selected = SERVICES.filter(s => selectedIds.includes(s.id));
-                            navigate('/checkout', { state: { selectedServices: selected, totalBudget } });
-                        }}
-                        disabled={totalBudget === 0}
-                        animate={{
-                            scale: totalBudget > 0 ? [1, 1.02, 1] : 1,
-                        }}
-                        transition={{ repeat: totalBudget > 0 ? Infinity : 0, duration: 2 }}
+                    {/* Mobile Button Link */}
+                    <Link
+                        to="/checkout"
+                        state={{ selectedServices: selectedServicesList, totalBudget }}
                         style={{
+                            display: 'block',
                             width: '100%',
-                            backgroundColor: totalBudget > 0 ? '#D4AF37' : '#222',
-                            color: totalBudget > 0 ? '#000' : '#555',
+                            textAlign: 'center',
+                            backgroundColor: '#D4AF37',
+                            color: '#000',
                             padding: '1rem',
                             borderRadius: '8px',
                             fontWeight: 600,
-                            border: 'none',
-                            fontSize: '1rem'
+                            fontSize: '1rem',
+                            textDecoration: 'none' // Ensure link looks like button
                         }}
                     >
-                        {totalBudget > 0 ? 'Book This Thali' : 'Select Items'}
-                    </motion.button>
+                        Book This Thali
+                    </Link>
                 </motion.div>
             )}
 
@@ -319,7 +319,7 @@ const ThaliBuilder = () => {
 };
 
 // Extracted for cleanliness
-const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, navigate }) => {
+const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices }) => {
     return (
         <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -398,33 +398,60 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, navigate }) => {
                 </div>
             </div>
 
-            <motion.button
-                onClick={() => {
-                    const selected = SERVICES.filter(s => selectedIds.includes(s.id));
-                    navigate('/checkout', { state: { selectedServices: selected, totalBudget } });
-                }}
-                disabled={totalBudget === 0}
-                animate={{
-                    scale: totalBudget > 0 ? [1, 1.02, 1] : 1,
-                    borderColor: totalBudget > 0 ? ['#D4AF37', '#fff', '#D4AF37'] : '#333'
-                }}
-                transition={{ repeat: totalBudget > 0 ? Infinity : 0, duration: 2, ease: "easeInOut" }}
-                style={{
-                    width: '100%',
-                    backgroundColor: totalBudget > 0 ? '#D4AF37' : 'rgba(255,255,255,0.05)',
-                    color: totalBudget > 0 ? '#000' : '#666',
-                    padding: '1.1rem',
-                    borderRadius: '12px',
-                    marginTop: '2rem',
-                    fontSize: '1rem',
-                    fontWeight: 600,
-                    border: totalBudget > 0 ? '1px solid #D4AF37' : '1px solid transparent',
-                    cursor: totalBudget > 0 ? 'pointer' : 'not-allowed',
-                    opacity: totalBudget > 0 ? 1 : 0.7,
-                    transition: 'background-color 0.3s'
-                }}>
-                {totalBudget > 0 ? 'Book This Thali' : 'Select Items'}
-            </motion.button>
+            {/* Configurable Button/Link based on status */}
+            {totalBudget > 0 ? (
+                <Link
+                    to="/checkout"
+                    state={{ selectedServices, totalBudget }}
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'center',
+                        textDecoration: 'none',
+                    }}
+                >
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.02, 1],
+                            borderColor: ['#D4AF37', '#fff', '#D4AF37']
+                        }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                        style={{
+                            backgroundColor: '#D4AF37',
+                            color: '#000',
+                            padding: '1.1rem',
+                            borderRadius: '12px',
+                            marginTop: '2rem',
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                            border: '1px solid #D4AF37',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Book This Thali
+                    </motion.div>
+                </Link>
+            ) : (
+                <button
+                    disabled
+                    style={{
+                        width: '100%',
+                        backgroundColor: 'rgba(255,255,255,0.05)',
+                        color: '#666',
+                        padding: '1.1rem',
+                        borderRadius: '12px',
+                        marginTop: '2rem',
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        border: '1px solid transparent',
+                        cursor: 'not-allowed',
+                        opacity: 0.7,
+                    }}
+                >
+                    Select Items
+                </button>
+            )}
+
         </motion.div>
     );
 };
