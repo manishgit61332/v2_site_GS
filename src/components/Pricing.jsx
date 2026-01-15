@@ -40,7 +40,8 @@ const Pricing = () => {
                         <p style={{ color: 'var(--color-orange)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2rem' }}>For Ongoing Dominance</p>
 
                         <div style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '2rem' }}>
-                            $4,000<span style={{ fontSize: '1rem', opacity: 0.5, fontWeight: 400 }}>/mo</span>
+                            $1,500<span style={{ fontSize: '1rem', opacity: 0.5, fontWeight: 400 }}>/mo</span>
+
                         </div>
 
                         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '3rem' }}>
@@ -59,7 +60,8 @@ const Pricing = () => {
                         </ul>
 
                         <button
-                            onClick={() => navigate('/checkout', { state: { selectedServices: [{ name: 'The Partner', price: 4000 }], totalBudget: 4000 } })}
+                            onClick={() => navigate('/checkout', { state: { selectedServices: [{ name: 'The Partner', price: 1500 }], totalBudget: 1500 } })}
+
                             style={{
                                 width: '100%',
                                 padding: '1.2rem',

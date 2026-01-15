@@ -61,7 +61,9 @@ const HallOfFame = () => {
                             color: 'var(--color-white)',
                             borderRadius: '50px',
                             cursor: 'pointer',
-                            transition: 'all 0.3s ease'
+                            transition: 'all 0.3s ease',
+                            position: 'relative',
+                            zIndex: 50
                         }}
                     >
                         If this resonates, let’s talk.
