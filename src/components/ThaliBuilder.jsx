@@ -293,7 +293,7 @@ const ThaliBuilder = () => {
                     </div>
 
                     {/* Mobile Button Link */}
-                    <div
+                    <button
                         onClick={() => navigate('/checkout', { state: { selectedServices: selectedServicesList, totalBudget } })}
                         style={{
                             display: 'block',
@@ -308,11 +308,13 @@ const ThaliBuilder = () => {
                             cursor: 'pointer',
                             userSelect: 'none',
                             position: 'relative',
-                            zIndex: 2000
+                            zIndex: 2000,
+                            border: 'none',
+                            outline: 'none'
                         }}
                     >
                         Book This Thali
-                    </div>
+                    </button>
                 </motion.div>
             )}
 
@@ -404,38 +406,34 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
 
             {/* Configurable Button/Link based on status */}
             {totalBudget > 0 ? (
-                <div
+            {/* Configurable Button/Link based on status */}
+            {totalBudget > 0 ? (
+                <motion.button
                     onClick={() => navigate('/checkout', { state: { selectedServices, totalBudget } })}
+                    animate={{
+                        scale: [1, 1.02, 1],
+                        borderColor: ['#D4AF37', '#fff', '#D4AF37']
+                    }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
                     style={{
                         display: 'block',
                         width: '100%',
-                        textAlign: 'center',
-                        textDecoration: 'none',
+                        backgroundColor: '#D4AF37',
+                        color: '#000',
+                        padding: '1.1rem',
+                        borderRadius: '12px',
+                        marginTop: '2rem',
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        border: '1px solid #D4AF37',
+                        cursor: 'pointer',
+                        position: 'relative',
+                        zIndex: 100
                     }}
                 >
-                    <motion.div
-                        animate={{
-                            scale: [1, 1.02, 1],
-                            borderColor: ['#D4AF37', '#fff', '#D4AF37']
-                        }}
-                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                        style={{
-                            backgroundColor: '#D4AF37',
-                            color: '#000',
-                            padding: '1.1rem',
-                            borderRadius: '12px',
-                            marginTop: '2rem',
-                            fontSize: '1rem',
-                            fontWeight: 600,
-                            border: '1px solid #D4AF37',
-                            cursor: 'pointer',
-                            position: 'relative',
-                            zIndex: 100
-                        }}
-                    >
-                        Book This Thali
-                    </motion.div>
-                </div>
+                    Book This Thali
+                </motion.button>
+            ) : (
             ) : (
                 <button
                     disabled
