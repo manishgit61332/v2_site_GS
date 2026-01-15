@@ -1,110 +1,71 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Quote } from 'lucide-react';
 import { useSectionColor } from '../context/ScrollColorContext';
-
-const TestimonialCard = ({ role, quote, company }) => (
-    <div
-        style={{
-            padding: '2rem',
-            backgroundColor: '#111',
-            borderRadius: '12px',
-            border: '1px solid #333',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem',
-            minWidth: 'min(350px, 85vw)', // Responsive width for mobile
-            height: '100%',
-            marginRight: '2rem'
-        }}
-    >
-        <Quote size={24} color="var(--color-mint)" style={{ opacity: 0.5 }} />
-        <p style={{ fontSize: '1.1rem', lineHeight: 1.6, opacity: 0.9 }}>"{quote}"</p>
-        <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <div style={{ fontWeight: 'bold', color: '#fff' }}>{role}</div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--color-orange)', opacity: 0.8 }}>{company}</div>
-        </div>
-    </div>
-);
+import { useNavigate } from 'react-router-dom';
 
 const HallOfFame = () => {
     const setGlobalTheme = useSectionColor();
-
-    const testimonials = [
-        {
-            role: "Founder & CEO",
-            company: "Series A Fintech",
-            quote: "Gensync didn't just design our site, they engineered our entire narrative. The easiest ROI I've had this year."
-        },
-        {
-            role: "CMO",
-            company: "AI Infrastructure",
-            quote: "Finally, an agency that understands that 'pretty' isn't enough. The distribution strategy changed our roadmap."
-        },
-        {
-            role: "Director of Marketing",
-            company: "SaaS Scaleup",
-            quote: "The Thali model is genius. We stopped hiring freelancers and just plugged Gensync in. Velocity went up 3x."
-        },
-        {
-            role: "Founder",
-            company: "Stealth Startup",
-            quote: "I was skeptical about the 'no headcount' pitch. I'm not anymore. They work faster than my in-house team ever did."
-        },
-        {
-            role: "Head of Growth",
-            company: "E-commerce Giant",
-            quote: "Their content engineering is legitimate. We learned more about our audience in 2 weeks than in the last 2 years."
-        },
-        {
-            role: "Venture Partner",
-            company: "Global VC Firm",
-            quote: "I refer all my portfolio companies to Gensync. They fix the 'story problem' faster than anyone."
-        }
-    ];
-
-    // Double the array to ensure seamless looping
-    const marqueeContent = [...testimonials, ...testimonials];
+    const navigate = useNavigate();
 
     return (
         <motion.section
             onViewportEnter={() => setGlobalTheme('#000000', '#FFFFFF', 1.5)}
             viewport={{ margin: "-10% 0px -10% 0px" }}
             className="section-padding"
-            style={{ backgroundColor: 'transparent', color: '#fff', overflow: 'hidden' }}
-        >
-            <div className="container">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    style={{ textAlign: 'center', marginBottom: 'var(--spacing-lg)' }}
-                >
-                    <h2 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Hall of Fame</h2>
-                    <p style={{ opacity: 0.7 }}>Don't just take our word for it.</p>
-                </motion.div>
-            </div>
-
-            {/* Marquee Container with Gradient Masks for Fade Efeect */}
-            <div style={{
-                position: 'relative',
-                width: '100%',
+            style={{ 
+                backgroundColor: 'transparent', 
+                color: '#fff', 
+                minHeight: '60vh',
                 display: 'flex',
-                overflow: 'hidden',
-                maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
-            }}>
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
                 <motion.div
-                    style={{ display: 'flex' }}
-                    animate={{ x: '-50%' }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 30 // Speed of scroll
-                    }}
-                    whileHover={{ animationPlayState: 'paused' }} // Pause on hover (if using CCS animation, but for framer we need to pause differently or just rely on slow scroll)
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
                 >
-                    {marqueeContent.map((t, i) => (
-                        <TestimonialCard key={i} {...t} />
-                    ))}
+                    <h2 style={{ 
+                        fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
+                        marginBottom: '2rem',
+                        fontFamily: 'var(--font-heading)',
+                        color: 'var(--color-white)'
+                    }}>
+                        We’re early.
+                    </h2>
+                    
+                    <div style={{ 
+                        fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', 
+                        lineHeight: 1.6, 
+                        opacity: 0.8,
+                        marginBottom: '3rem',
+                        fontFamily: 'var(--font-body)'
+                    }}>
+                        <p style={{ marginBottom: '1rem' }}>We don’t have 47 polished testimonials yet.</p>
+                        <p style={{ marginBottom: '1rem' }}>What we do have is real work, real thinking, and founders who come back.</p>
+                        <p>If that’s not enough, we’re probably not a fit.</p>
+                    </div>
+
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => window.location.href = 'mailto:contact@gensync.in'}
+                        style={{
+                            padding: '1rem 2rem',
+                            fontSize: '1.2rem',
+                            backgroundColor: 'transparent',
+                            border: '1px solid var(--color-white)',
+                            color: 'var(--color-white)',
+                            borderRadius: '50px',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease'
+                        }}
+                    >
+                        If this resonates, let’s talk.
+                    </motion.button>
                 </motion.div>
             </div>
         </motion.section>

@@ -293,9 +293,8 @@ const ThaliBuilder = () => {
                     </div>
 
                     {/* Mobile Button Link */}
-                    <Link
-                        to="/checkout"
-                        state={{ selectedServices: selectedServicesList, totalBudget }}
+                    <div
+                        onClick={() => navigate('/checkout', { state: { selectedServices: selectedServicesList, totalBudget } })}
                         style={{
                             display: 'block',
                             width: '100%',
@@ -306,11 +305,12 @@ const ThaliBuilder = () => {
                             borderRadius: '8px',
                             fontWeight: 600,
                             fontSize: '1rem',
-                            textDecoration: 'none' // Ensure link looks like button
+                            cursor: 'pointer',
+                            userSelect: 'none'
                         }}
                     >
                         Book This Thali
-                    </Link>
+                    </div>
                 </motion.div>
             )}
 
@@ -320,6 +320,8 @@ const ThaliBuilder = () => {
 
 // Extracted for cleanliness
 const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices }) => {
+    const navigate = useNavigate();
+
     return (
         <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -400,9 +402,8 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
 
             {/* Configurable Button/Link based on status */}
             {totalBudget > 0 ? (
-                <Link
-                    to="/checkout"
-                    state={{ selectedServices, totalBudget }}
+                <div
+                    onClick={() => navigate('/checkout', { state: { selectedServices, totalBudget } })}
                     style={{
                         display: 'block',
                         width: '100%',
@@ -430,7 +431,7 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
                     >
                         Book This Thali
                     </motion.div>
-                </Link>
+                </div>
             ) : (
                 <button
                     disabled
