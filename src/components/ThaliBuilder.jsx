@@ -405,7 +405,6 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
             </div>
 
             {/* Configurable Button/Link based on status */}
-            {totalBudget > 0 ? (
             {/* Configurable Button/Link based on status */}
             {totalBudget > 0 ? (
                 <motion.button
@@ -433,7 +432,6 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
                 >
                     Book This Thali
                 </motion.button>
-            ) : (
             ) : (
                 <button
                     disabled
