@@ -95,7 +95,7 @@ const Navbar = () => {
                                 <div style={{ display: 'flex', gap: '2rem' }}>
                                     <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '0.9rem' }}>Proof + Stories</button>
                                     <button onClick={() => scrollToSection('protocol')} style={{ color: '#fff', fontSize: '0.9rem' }}>The Protocol</button>
-                                    <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '0.9rem' }}>Start the Narrative Review</button>
+                                    <button onClick={() => window.open("mailto:contact@gensync.in?subject=Talk%20through%20my%20idea", '_blank')} style={{ color: '#fff', fontSize: '0.9rem' }}>Talk through your idea</button>
                                 </div>
                             )}
 
@@ -144,7 +144,7 @@ const Navbar = () => {
                     >
                         <button onClick={() => scrollToSection('work')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>Proof + Stories</button>
                         <button onClick={() => scrollToSection('protocol')} style={{ color: '#fff', fontSize: '2rem', fontFamily: 'var(--font-heading)' }}>The Protocol</button>
-                        <button onClick={() => window.open('https://calendly.com/manish-gensync/30min', '_blank')} style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-heading)' }}>Start the Narrative Review</button>
+                        <button onClick={() => window.open("mailto:contact@gensync.in?subject=Talk%20through%20my%20idea", '_blank')} style={{ color: '#fff', fontSize: '1.5rem', fontFamily: 'var(--font-heading)' }}>Talk through your idea</button>
                     </motion.div>
                 )}
             </AnimatePresence>

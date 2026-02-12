@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { motion, useScroll, useTransform, useMotionValueEvent, useSpring, AnimatePresence } from 'framer-motion';
+import { ArrowUpRight, X, ArrowRight } from 'lucide-react';
 import { useSectionColor } from '../context/ScrollColorContext';
+import { WORK_FOLDERS } from '../data/workData';
 
 // Helper: Linear Interpolation for Hex Colors
 const lerpColor = (a, b, amount) => {
@@ -16,45 +16,6 @@ const lerpColor = (a, b, amount) => {
 
     return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
 }
-
-const SERVICES = [
-    {
-        id: 0,
-        title: 'Web Experiences.',
-        description: 'Immersive sites that convert.',
-        bg: '#051408', // Deep Mint Void
-        img: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=1974&auto=format&fit=crop',
-        slug: 'web-experiences',
-        color: '#E3FFEB'
-    },
-    {
-        id: 1,
-        title: 'Product Commercials.',
-        description: 'High-octane visuals.',
-        bg: '#1f0b00', // Deep Orange Void
-        img: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop',
-        slug: 'product-commercials',
-        color: '#FF7701'
-    },
-    {
-        id: 2,
-        title: 'Branding.',
-        description: 'Identity systems that stick.',
-        bg: '#1a0507', // Deep Maroon Void
-        img: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop',
-        slug: 'branding',
-        color: '#FF9F9F'
-    },
-    {
-        id: 3,
-        title: 'Social & Campaigns.',
-        description: 'Content that spreads.',
-        bg: '#140505', // Deep Red Void
-        img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop',
-        slug: 'social-campaigns',
-        color: '#C27B7F'
-    }
-];
 
 // Hook for media query
 const useMediaQuery = (query) => {
@@ -73,7 +34,7 @@ const useMediaQuery = (query) => {
 
 const CaseStudies = () => {
     const containerRef = useRef(null);
-    const navigate = useNavigate();
+    const [selectedFolder, setSelectedFolder] = useState(null);
     const setGlobalTheme = useSectionColor();
     const isVisible = useRef(false);
     const isMobile = useMediaQuery('(max-width: 768px)');
@@ -83,18 +44,19 @@ const CaseStudies = () => {
         offset: ["start start", "end end"]
     });
 
-    const springScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+    // Softer, heavier spring for "very sticky" ease-in-ease-out feel
+    const springScroll = useSpring(scrollYProgress, { stiffness: 60, damping: 20, restDelta: 0.001 });
 
-    // Horizontal Scroll Transformation (Only valid on Desktop)
+    // Horizontal Scroll Transformation
     const x = useTransform(springScroll, [0, 1], ["0%", "-85%"]);
 
     // BACKGROUND COLOR LOGIC
     useMotionValueEvent(springScroll, "change", (latest) => {
-        if (!isVisible.current || latest > 0.99) {
+        if (!isVisible.current || latest > 0.99 || selectedFolder) {
             return;
         }
 
-        const totalSteps = SERVICES.length;
+        const totalSteps = WORK_FOLDERS.length;
         const stepSize = 1 / totalSteps;
 
         let activeIndex = Math.floor(latest / stepSize);
@@ -104,13 +66,22 @@ const CaseStudies = () => {
         const linearProgress = (latest - stepStart) / stepSize;
         const localProgress = linearProgress;
 
-        const currentColor = SERVICES[activeIndex].bg;
-        const nextColor = (activeIndex < totalSteps - 1) ? SERVICES[activeIndex + 1].bg : currentColor;
+        const currentColor = WORK_FOLDERS[activeIndex].bg;
+        const nextColor = (activeIndex < totalSteps - 1) ? WORK_FOLDERS[activeIndex + 1].bg : currentColor;
 
         const blendedBgColor = lerpColor(currentColor, nextColor, localProgress);
 
         setGlobalTheme(blendedBgColor, '#FFFFFF', 0);
     });
+
+    // Reset theme when closing
+    useEffect(() => {
+        if (!selectedFolder) {
+            // Re-trigger scroll logic or default to start color
+            setGlobalTheme(WORK_FOLDERS[0].bg, '#FFFFFF', 0);
+        }
+    }, [selectedFolder, setGlobalTheme]);
+
 
     return (
         <motion.section
@@ -118,18 +89,15 @@ const CaseStudies = () => {
             onViewportLeave={() => isVisible.current = false}
             ref={containerRef}
             id="work"
-            // Mobile: Auto height, Desktop: 400vh for scroll distance
             style={{
-                height: isMobile ? 'auto' : '400vh',
+                height: isMobile ? 'auto' : '500vh',
                 position: 'relative',
                 marginBottom: isMobile ? '4rem' : 0
             }}
         >
             <div style={{
-                // Mobile: Normal flow, Desktop: Sticky
                 position: isMobile ? 'relative' : 'sticky',
                 top: 0,
-                // Mobile: Auto height, Desktop: 100vh viewport
                 height: isMobile ? 'auto' : '100vh',
                 overflow: 'hidden',
                 display: 'flex',
@@ -156,26 +124,24 @@ const CaseStudies = () => {
                 </h2>
 
                 <motion.div style={{
-                    // Mobile: No transformation, Desktop: Horizontal scroll
                     x: isMobile ? 0 : x,
                     display: 'flex',
-                    // Mobile: Vertical Column, Desktop: Horizontal Row
                     flexDirection: isMobile ? 'column' : 'row',
                     gap: isMobile ? '2rem' : '4vw',
                     paddingLeft: '5vw',
                     paddingRight: isMobile ? '5vw' : '60vw',
                     alignItems: isMobile ? 'stretch' : 'center',
-                    // Mobile: Auto height, Desktop: 100% to fill updated viewport
                     height: isMobile ? 'auto' : '100%',
                     willChange: isMobile ? 'auto' : 'transform'
                 }}>
-                    {SERVICES.map((service, index) => (
+                    {WORK_FOLDERS.map((folder, index) => (
                         <ServiceCard
-                            key={service.id}
-                            service={service}
-                            navigate={navigate}
+                            key={folder.id}
+                            folder={folder}
+                            onClick={() => setSelectedFolder(folder)}
                             globalProgress={springScroll}
                             isMobile={isMobile}
+                            index={index}
                         />
                     ))}
                 </motion.div>
@@ -192,24 +158,32 @@ const CaseStudies = () => {
                 )}
 
             </div>
+
+            {/* FOLDER OVERLAY */}
+            <AnimatePresence>
+                {selectedFolder && (
+                    <FolderDetailView
+                        folder={selectedFolder}
+                        onClose={() => setSelectedFolder(null)}
+                    />
+                )}
+            </AnimatePresence>
         </motion.section>
     );
 };
 
-const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
-    // Parallax Logic: shift bg x based on global progress
-    // Updated: Centered range [-10%, 10%] to prevent clipping, coupled with scale 1.25.
+const ServiceCard = ({ folder, onClick, globalProgress, isMobile, index }) => {
+    // Parallax Logic
     const parallaxX = useTransform(globalProgress, [0, 1], ["-10%", "10%"]);
 
-    // Framer Motion Variants for smooth hover
     const variants = {
         initial: { scale: 1.25, filter: 'brightness(0.6) saturate(0.8)' },
-        hover: { scale: 1.35, filter: 'brightness(0.8) saturate(1.1)' } // Slightly larger scale on hover
+        hover: { scale: 1.35, filter: 'brightness(0.8) saturate(1.1)' }
     };
 
     return (
         <motion.div
-            onClick={() => navigate(`/service/${service.slug}`)}
+            onClick={onClick}
             initial="initial"
             whileHover="hover"
             whileTap={{ scale: 0.98 }}
@@ -228,24 +202,20 @@ const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
                 boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)'
             }}
         >
-            {/* Image Background with Parallax */}
+            {/* Image Background */}
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
                 <motion.div
                     style={{
                         position: 'absolute',
                         inset: '-10%',
-                        backgroundImage: `url(${service.img})`,
+                        backgroundImage: `url(${folder.img})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        // On mobile, we might want to disable parallaxX if it feels weird, but let's keep it subtle or disable.
-                        // Ideally, vertical parallax is better for mobile. 
-                        // For now, let's just keep horizontal parallax disabled on Mobile or use a fixed value.
                         x: isMobile ? 0 : parallaxX,
-                        willChange: 'transform' // Performance optimization
+                        willChange: 'transform'
                     }}
                     variants={variants}
-                    transition={{ duration: 0.4, ease: "easeOut" }} // Smooth transition
-                    className="card-bg"
+                    transition={{ duration: 0.4, ease: "easeOut" }}
                 />
             </div>
 
@@ -257,15 +227,15 @@ const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
                 <span style={{
                     display: 'inline-block',
                     marginBottom: '1rem',
-                    color: service.color,
-                    border: `1px solid ${service.color}`,
+                    color: folder.color,
+                    border: `1px solid ${folder.color}`,
                     padding: '0.25rem 0.75rem',
                     borderRadius: '100px',
                     fontSize: '0.75rem',
                     letterSpacing: '0.05em',
                     textTransform: 'uppercase'
                 }}>
-                    0{service.id + 1}
+                    0{index + 1}
                 </span>
 
                 <h3 style={{
@@ -275,7 +245,7 @@ const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
                     margin: '0 0 0.5rem 0',
                     lineHeight: 1
                 }}>
-                    {service.title}
+                    {folder.subtitle}
                 </h3>
 
                 <p style={{
@@ -285,12 +255,177 @@ const ServiceCard = ({ service, navigate, globalProgress, isMobile }) => {
                     maxWidth: '80%',
                     marginBottom: '2rem'
                 }}>
-                    {service.description}
+                    {folder.title}
                 </p>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', fontWeight: 500 }}>
-                    View Case Study <ArrowUpRight size={18} />
+                    Open Folder <ArrowRight size={18} />
                 </div>
+            </div>
+        </motion.div>
+    );
+};
+
+const FolderDetailView = ({ folder, onClose }) => {
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        window.lenis?.stop();
+        return () => {
+            document.body.style.overflow = 'unset';
+            window.lenis?.start();
+        };
+    }, []);
+
+    return (
+        <motion.div
+            data-lenis-prevent
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 99999,
+                backgroundColor: '#050505',
+                overflowY: 'auto'
+            }}
+        >
+            {/* Header / Nav */}
+            <div style={{
+                padding: '2rem 5%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                position: 'sticky',
+                top: 0,
+                background: 'rgba(5,5,5,0.8)',
+                backdropFilter: 'blur(10px)',
+                zIndex: 10,
+                borderBottom: '1px solid rgba(255,255,255,0.1)'
+            }}>
+                <div>
+                    <div style={{ fontSize: '0.9rem', color: folder.color, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Folder</div>
+                    <h2 style={{ fontSize: '1.5rem', color: '#fff', fontFamily: 'var(--font-heading)' }}>{folder.title}</h2>
+                </div>
+                <button
+                    onClick={onClose}
+                    style={{
+                        background: 'rgba(255,255,255,0.1)',
+                        border: 'none',
+                        color: '#fff',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <X size={20} />
+                </button>
+            </div>
+
+            {/* Content Container */}
+            <div className="container" style={{ padding: '4rem 0' }}>
+
+                {/* Intro */}
+                <div style={{ maxWidth: '800px', marginBottom: '4rem' }}>
+                    <h3 style={{ fontSize: '2rem', color: '#fff', fontFamily: 'var(--font-heading)', marginBottom: '1.5rem' }}>
+                        {folder.details}
+                    </h3>
+                </div>
+
+                {/* Projects Grid */}
+                <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2rem', fontSize: '0.9rem' }}>Inside this folder</h4>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '2rem',
+                    marginBottom: '6rem'
+                }}>
+                    {folder.projects.map((project, idx) => (
+                        <div key={idx} style={{ position: 'relative' }}>
+                            <div style={{
+                                height: '250px',
+                                borderRadius: '16px',
+                                overflow: 'hidden',
+                                marginBottom: '1rem',
+                                backgroundColor: '#222'
+                            }}>
+                                {project.video ? (
+                                    <video
+                                        src={project.video}
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    <img src={project.img} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                )}
+                            </div>
+                            <h4 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '0.2rem' }}>{project.title}</h4>
+                            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{project.type}</p>
+                            {project.pdf && (
+                                <a
+                                    href={project.pdf}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        fontSize: '0.8rem',
+                                        color: folder.color,
+                                        textDecoration: 'none',
+                                        border: `1px solid ${folder.color}`,
+                                        padding: '0.25rem 0.75rem',
+                                        borderRadius: '50px',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.background = folder.color;
+                                        e.currentTarget.style.color = '#000';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.background = 'transparent';
+                                        e.currentTarget.style.color = folder.color;
+                                    }}
+                                >
+                                    View Case Study <ArrowUpRight size={14} />
+                                </a>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Testimonials */}
+                <div style={{
+                    background: 'rgba(255,255,255,0.03)',
+                    borderRadius: '24px',
+                    padding: '3rem',
+                    border: '1px solid rgba(255,255,255,0.05)'
+                }}>
+                    <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2rem', fontSize: '0.9rem' }}>Client Feedback</h4>
+                    <div style={{ display: 'grid', gap: '2rem' }}>
+                        {folder.testimonials.map((t, i) => (
+                            <div key={i}>
+                                <p style={{ fontSize: '1.5rem', color: '#fff', fontFamily: 'var(--font-heading)', lineHeight: 1.4, marginBottom: '1rem' }}>
+                                    "{t.quote}"
+                                </p>
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                    <span style={{ color: '#fff', fontWeight: 600 }}>{t.author}</span>
+                                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>— {t.role}</span>
+                                </div>
+                            </div>
+                        ))}
+
+                    </div>
+                </div>
+
             </div>
         </motion.div>
     );

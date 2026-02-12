@@ -3,6 +3,27 @@ import { motion } from 'framer-motion';
 import { useSectionColor } from '../context/ScrollColorContext';
 import { useNavigate } from 'react-router-dom';
 
+const Testimonial = ({ quote, author, role }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        style={{
+            textAlign: 'left',
+            padding: '2rem',
+            background: 'rgba(255,255,255,0.03)',
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.05)'
+        }}
+    >
+        <p style={{ fontSize: '1.1rem', lineHeight: 1.5, marginBottom: '1.5rem', opacity: 0.9 }}>"{quote}"</p>
+        <div>
+            <div style={{ color: '#fff', fontWeight: 600, fontSize: '0.95rem' }}>{author}</div>
+            <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>{role}</div>
+        </div>
+    </motion.div>
+);
+
 const HallOfFame = () => {
     const setGlobalTheme = useSectionColor();
     const navigate = useNavigate();
@@ -12,47 +33,60 @@ const HallOfFame = () => {
             onViewportEnter={() => setGlobalTheme('#000000', '#FFFFFF', 1.5)}
             viewport={{ margin: "-10% 0px -10% 0px" }}
             className="section-padding"
-            style={{ 
-                backgroundColor: 'transparent', 
-                color: '#fff', 
+            style={{
+                backgroundColor: 'transparent',
+                color: '#fff',
                 minHeight: '60vh',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center'
             }}
         >
-            <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
+            <div className="container" style={{ maxWidth: '1000px', textAlign: 'center' }}>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h2 style={{ 
-                        fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
-                        marginBottom: '2rem',
+                    <h2 style={{
+                        fontSize: '2.5rem',
+                        marginBottom: '3rem',
                         fontFamily: 'var(--font-heading)',
                         color: 'var(--color-white)'
                     }}>
-                        We’re early.
+                        Founders trust <span style={{ color: 'var(--color-orange)' }}>clarity.</span>
                     </h2>
-                    
-                    <div style={{ 
-                        fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', 
-                        lineHeight: 1.6, 
-                        opacity: 0.8,
-                        marginBottom: '3rem',
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                        gap: '2rem',
+                        marginBottom: '4rem',
                         fontFamily: 'var(--font-body)'
                     }}>
-                        <p style={{ marginBottom: '1rem' }}>We don’t have 47 polished testimonials yet.</p>
-                        <p style={{ marginBottom: '1rem' }}>What we do have is real work, real thinking, and founders who come back.</p>
-                        <p>If that’s not enough, we’re probably not a fit.</p>
+                        <Testimonial
+                            quote="What stood out was how structured the process was. No hand-holding, no chaos. Things just moved."
+                            author="Alex D."
+                            role="Founder, Series A SaaS"
+                        />
+                        <Testimonial
+                            quote="They didn't just make a pretty site. They fixed our entire pitch. We closed our round 3 weeks later."
+                            author="Sarah J."
+                            role="CEO, Fintech Startup"
+                        />
+                        <Testimonial
+                            quote="Clear communication. No ego. Just good work delivered on time."
+                            author="Mike R."
+                            role="Founder, E-commerce Brand"
+                        />
                     </div>
 
-                    <motion.button
+                    <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => window.location.href = 'mailto:contact@gensync.in'}
+                        href="mailto:contact@gensync.in"
                         style={{
                             padding: '1rem 2rem',
                             fontSize: '1.2rem',
@@ -63,11 +97,13 @@ const HallOfFame = () => {
                             cursor: 'pointer',
                             transition: 'all 0.3s ease',
                             position: 'relative',
-                            zIndex: 50
+                            zIndex: 100000,
+                            display: 'inline-block',
+                            textDecoration: 'none'
                         }}
                     >
                         If this resonates, let’s talk.
-                    </motion.button>
+                    </motion.a>
                 </motion.div>
             </div>
         </motion.section>

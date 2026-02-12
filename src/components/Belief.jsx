@@ -53,7 +53,7 @@ const Belief = () => {
                         </div>
 
                         {/* DEEP DIVE LINK - Dark color */}
-                        <a href="#work" style={{ marginLeft: 'auto', color: 'var(--color-orange)', textDecoration: 'none', borderBottom: '1px solid var(--color-orange)', paddingBottom: '2px', fontSize: '0.9rem' }}>
+                        <a href="#protocol" onClick={(e) => { e.preventDefault(); document.getElementById('protocol')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ marginLeft: 'auto', color: 'var(--color-orange)', textDecoration: 'none', borderBottom: '1px solid var(--color-orange)', paddingBottom: '2px', fontSize: '0.9rem' }}>
                             See what that actually looks like &darr;
                         </a>
                     </div>

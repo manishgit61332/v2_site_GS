@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import Hero from '../components/Hero';
-import ValuePillars from '../components/ValuePillars';
+
 import Belief from '../components/Belief';
 import Philosophy from '../components/Philosophy';
 import Pricing from '../components/Pricing';
@@ -26,18 +26,18 @@ const Home = () => {
 
             <Navbar />
             <Hero />
-            <ValuePillars />
-            <CaseStudies /> {/* ID 'work' is inside CaseStudies */}
+
+            <SystemFramework /> {/* Moved up: Process before Work */}
+            <CaseStudies />
             <Belief />
             <Philosophy />
             {/* Narrative Flow: Ethos -> Methodology -> Credibility (Team/Social) -> Proof (Cases) -> Action (Thali) -> Pricing */}
-            <SystemFramework />
             <TeamKitchen />
             <HallOfFame />
 
-            <ThaliBuilder /> {/* ID 'thali' is inside ThaliBuilder */}
+            <ThaliBuilder />
             <Pricing />
-            <Footer /> {/* ID 'contact' is inside Footer */}
+            <Footer />
         </>
     );
 };

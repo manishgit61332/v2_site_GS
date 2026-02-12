@@ -2,20 +2,30 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useSectionColor } from '../context/ScrollColorContext';
 
-const QuoteBlock = ({ quote, author, interpretation, delay }) => (
+const ThinkingPoint = ({ title, description, delay }) => (
     <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay, duration: 0.6 }}
-        style={{ flex: '1 1 300px', minWidth: 'min(100%, 300px)', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}
+        style={{ marginBottom: '2.5rem' }}
     >
-        <blockquote style={{ fontFamily: 'var(--font-heading)', fontSize: '2rem', lineHeight: 1.2 }}>
-            "{quote}"
-        </blockquote>
-        <cite style={{ fontSize: '0.9rem', opacity: 0.6, fontStyle: 'normal' }}>— {author}</cite>
-        <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)', marginTop: 'auto', marginBottom: 'var(--spacing-sm)' }}></div>
-        <p style={{ fontSize: '1rem', opacity: 0.8, minHeight: '60px' }}>{interpretation}</p>
+        <h3 style={{
+            fontSize: '1.2rem',
+            color: '#fff',
+            marginBottom: '0.5rem',
+            fontFamily: 'var(--font-heading)'
+        }}>
+            {title}
+        </h3>
+        <p style={{
+            fontSize: '1rem',
+            color: 'rgba(255,255,255,0.7)',
+            lineHeight: 1.6,
+            maxWidth: '600px'
+        }}>
+            {description}
+        </p>
     </motion.div>
 );
 
@@ -29,28 +39,47 @@ const Philosophy = () => {
             className="section-padding"
             style={{ backgroundColor: 'transparent', overflow: 'hidden' }}
         >
-            <div className="container">
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--spacing-md)', justifyContent: 'space-between' }}>
-                    <QuoteBlock
-                        quote="If I was down to my last dollar, I would spend it on public relations."
-                        author="Bill Gates"
-                        interpretation="Visibility is the only currency that matters when resources are scarce."
-                        delay={0.1}
+            <div className="container" style={{ maxWidth: '1000px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem' }}>
+
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    style={{ maxWidth: '400px' }}
+                >
+                    <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-heading)', marginBottom: '1.5rem', lineHeight: 1.2 }}>
+                        How we think about <span style={{ color: 'var(--color-orange)' }}>Modern Content & AI.</span>
+                    </h2>
+                    <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6 }}>
+                        Tools are free. Taste is expensive. We use AI to accelerate, not to think.
+                    </p>
+                </motion.div>
+
+                {/* Points */}
+                <div>
+                    <ThinkingPoint
+                        title="Why most AI content feels generic"
+                        description="Because it averages everything. We force the models to be specific, opinionated, and weird."
+                        delay={0.2}
                     />
-                    <QuoteBlock
-                        quote="You can't connect the dots looking forward; you can only connect them looking backwards."
-                        author="Steve Jobs"
-                        interpretation="Trust that the obsession with quality (like a calligraphy class) pays off in ways data can't predict."
+                    <ThinkingPoint
+                        title="Why taste matters more than tools"
+                        description="Everyone has the same software. The differentiator is the human eye that curates the output."
                         delay={0.3}
                     />
-                    {/* UPDATED: Satyajit Ray Quote */}
-                    <QuoteBlock
-                        quote="The only clichés I want to see are the ones I make myself."
-                        author="Satyajit Ray"
-                        interpretation="We create original work, not copies."
+                    <ThinkingPoint
+                        title="Why execution speed without clarity fails"
+                        description="Moving fast in the wrong direction is just efficiently burning cash. We define the 'North Star' first."
+                        delay={0.4}
+                    />
+                    <ThinkingPoint
+                        title="Why we build systems, not just assets"
+                        description="A video is an asset. A workflow that produces 10 videos a month is a system. We build the engine."
                         delay={0.5}
                     />
                 </div>
+
             </div>
         </motion.section>
     );

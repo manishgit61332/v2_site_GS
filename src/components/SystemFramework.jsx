@@ -58,57 +58,105 @@ const SystemFramework = () => {
     const steps = [
         {
             number: "01",
-            title: "Discover",
-            subtitle: "Extracting the Truth",
-            description: "We audit your entire product and market. We find the one 'obvious' truth your competitors are ignoring."
+            title: "Context First",
+            subtitle: "Deep Dive",
+            description: "We deeply understand your product, market, and constraints before touching visuals."
         },
         {
             number: "02",
-            title: "Narrate",
-            subtitle: "Weaponized Storytelling",
-            description: "We turn that truth into a narrative framework. Not 'marketing copy', but a worldview that forces a reaction."
+            title: "Clarity over Creativity",
+            subtitle: "Strategy Defined",
+            description: "Strategy and messaging come before aesthetics. We clarify the 'what' and 'why' first."
         },
         {
             number: "03",
-            title: "Produce",
-            subtitle: "High-Fidelity Creation",
-            description: "Video, text, visual design. We build the assets that prove your narrative is real, using top-tier talent only."
+            title: "Execution with Taste",
+            subtitle: "Production Standards",
+            description: "Design, motion, content, AI workflows built to production standards in days, not months."
         },
         {
             number: "04",
-            title: "Distribute",
-            subtitle: "Engineered Reach",
-            description: "We don't hope for views. We target specific channels and communities to ensure your story lands in the right laps."
-        },
-        {
-            number: "05",
-            title: "Optimize",
+            title: "Iteration, not Guesswork",
             subtitle: "Feedback Loops",
-            description: "We watch the data. If it sparks a cult, we fuel it. If it doesn't, we tweak the angle until it does."
+            description: "We refine based on feedback and real-world performance. We don't guess, we calibrate."
         }
     ];
 
     return (
         <motion.section
-            onViewportEnter={() => setGlobalTheme('#050507', '#FFFFFF', 1.5)} // Return to void
+            onViewportEnter={() => setGlobalTheme('#050507', '#FFFFFF', 1.5)}
             viewport={{ margin: "-10% 0px -10% 0px" }}
             id="protocol"
-            className="container"
-            style={{ padding: '6rem 5%', maxWidth: '1000px', margin: '0 auto' }}
+            className="section-padding"
+            style={{ position: 'relative', overflow: 'hidden' }}
         >
-            <div style={{ marginBottom: '4rem', textAlign: 'center' }}>
-                <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-heading)', marginBottom: '1rem' }}>
-                    The <span style={{ color: 'var(--color-orange)' }}>Gensync Protocol</span>
-                </h2>
-                <p style={{ color: 'var(--color-light-gray)', maxWidth: '600px', margin: '0 auto' }}>
-                    We don't sell random services. We sell a system that builds authority.
-                </p>
-            </div>
+            <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
+                <div style={{ marginBottom: '6rem', textAlign: 'center' }}>
+                    <h2 style={{ fontSize: 'clamp(2.5rem, 4vw, 3.5rem)', fontFamily: 'var(--font-heading)', marginBottom: '1rem' }}>
+                        How We <span style={{ color: 'var(--color-orange)' }}>Actually Work</span>
+                    </h2>
+                    <p style={{ color: 'var(--color-light-gray)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
+                        Founders trust process, not promises. Here is our journey.
+                    </p>
+                </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                {steps.map((step, index) => (
-                    <StepCard key={index} {...step} delay={index * 0.1} />
-                ))}
+                <div style={{ position: 'relative', paddingLeft: '2rem' }}>
+                    {/* TIMELINE LINE */}
+                    <div style={{
+                        position: 'absolute',
+                        left: '0',
+                        top: '0',
+                        bottom: '0',
+                        width: '2px',
+                        background: 'linear-gradient(to bottom, transparent, var(--color-orange), transparent)',
+                        opacity: 0.5
+                    }} />
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+                        {steps.map((step, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-100px" }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                style={{ position: 'relative', paddingLeft: '2rem' }}
+                            >
+                                {/* DOT */}
+                                <div style={{
+                                    position: 'absolute',
+                                    left: '-2.4rem', // Center on line
+                                    top: '0.5rem',
+                                    width: '12px',
+                                    height: '12px',
+                                    backgroundColor: 'var(--color-black)',
+                                    border: '2px solid var(--color-orange)',
+                                    borderRadius: '50%',
+                                    zIndex: 2
+                                }} />
+
+                                <span style={{
+                                    fontSize: '0.85rem',
+                                    fontFamily: 'var(--font-heading)',
+                                    color: 'var(--color-orange)',
+                                    marginBottom: '0.5rem',
+                                    display: 'block',
+                                    opacity: 0.8
+                                }}>
+                                    Step {step.number}
+                                </span>
+
+                                <h3 style={{ fontSize: '2rem', fontFamily: 'var(--font-heading)', color: '#fff', marginBottom: '0.5rem' }}>
+                                    {step.title}
+                                </h3>
+
+                                <p style={{ color: 'var(--color-light-gray)', lineHeight: 1.6, fontSize: '1.1rem', maxWidth: '600px' }}>
+                                    {step.description}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </motion.section>
     );

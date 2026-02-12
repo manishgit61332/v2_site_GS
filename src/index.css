@@ -67,7 +67,7 @@ body::before {
   /* Optimized for performance (Fixes Brave/Chrome lag) */
   opacity: 0.03;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 1;
   transform: translateZ(0);
   /* Force GPU */
   backface-visibility: hidden;

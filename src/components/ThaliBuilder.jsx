@@ -308,7 +308,7 @@ const ThaliBuilder = () => {
                             cursor: 'pointer',
                             userSelect: 'none',
                             position: 'relative',
-                            zIndex: 2000,
+                            zIndex: 100000,
                             border: 'none',
                             outline: 'none'
                         }}
@@ -427,7 +427,7 @@ const ReceiptPanel = ({ selectedIds, totalBudget, totalTime, selectedServices })
                         border: '1px solid #D4AF37',
                         cursor: 'pointer',
                         position: 'relative',
-                        zIndex: 100
+                        zIndex: 100000
                     }}
                 >
                     Book This Thali
