@@ -47,8 +47,7 @@ const Footer = () => {
                     <p style={{ fontWeight: 'bold', marginBottom: '0.5rem' }}>Ready to start?</p>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
                         <a href="mailto:contact@gensync.in">contact@gensync.in</a>
-                        <a href="#">LinkedIn</a>
-                        <a href="#">X / Twitter</a>
+                        <a href="https://www.instagram.com/gensync.in/" target="_blank" rel="noopener noreferrer">Instagram</a>
                     </div>
                 </motion.div>
 

@@ -18,10 +18,10 @@ const Pricing = () => {
             <div className="container">
                 <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
                     <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', marginBottom: '1rem' }}>
-                        Stop guessing. <span style={{ color: 'var(--color-orange)' }}>Build your engine.</span>
+                        Two ways to <span style={{ color: 'var(--color-orange)' }}>work with us.</span>
                     </h2>
                     <p style={{ opacity: 0.7, fontSize: '1.25rem', maxWidth: '600px', margin: '0 auto' }}>
-                        Choose the model that fits your stage. No hidden fees. No "contact us for pricing" games.
+                        Transparent pricing. No surprises.
                     </p>
                 </div>
 
@@ -37,10 +37,10 @@ const Pricing = () => {
                         }}
                     >
                         <h3 style={{ fontSize: '1.75rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>The Partner</h3>
-                        <p style={{ color: 'var(--color-orange)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2rem' }}>For Ongoing Dominance</p>
+                        <p style={{ color: 'var(--color-orange)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2rem' }}>Ongoing Partnership</p>
 
                         <div style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '2rem' }}>
-                            $1,500<span style={{ fontSize: '1rem', opacity: 0.5, fontWeight: 400 }}>/mo</span>
+                            $3,000<span style={{ fontSize: '1rem', opacity: 0.5, fontWeight: 400 }}>/mo</span>
 
                         </div>
 
@@ -55,12 +55,15 @@ const Pricing = () => {
                                 <Check size={18} color="var(--color-orange)" /> <span>Webflow Development Included</span>
                             </li>
                             <li style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                <Check size={18} color="var(--color-orange)" /> <span>All-Inclusive: Video, AI, Web & Brand</span>
+                            </li>
+                            <li style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                                 <Check size={18} color="var(--color-orange)" /> <span>Priority Support (Slack)</span>
                             </li>
                         </ul>
 
                         <button
-                            onClick={() => navigate('/checkout', { state: { selectedServices: [{ name: 'The Partner', price: 1500 }], totalBudget: 1500 } })}
+                            onClick={() => navigate('/checkout', { state: { selectedServices: [{ name: 'The Partner', price: 3000 }], totalBudget: 3000 } })}
 
                             style={{
                                 width: '100%',
@@ -88,7 +91,7 @@ const Pricing = () => {
                         }}
                     >
                         <h3 style={{ fontSize: '1.75rem', marginBottom: '0.5rem', fontFamily: 'var(--font-heading)' }}>The Sprint</h3>
-                        <p style={{ color: 'var(--color-orange)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2rem' }}>For High-Impact Launches</p>
+                        <p style={{ color: 'var(--color-orange)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '2rem' }}>One-Time Projects</p>
 
                         <div style={{ fontSize: '3rem', fontWeight: 700, marginBottom: '2rem' }}>
                             Custom

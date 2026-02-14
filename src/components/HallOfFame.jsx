@@ -56,7 +56,7 @@ const HallOfFame = () => {
                         fontFamily: 'var(--font-heading)',
                         color: 'var(--color-white)'
                     }}>
-                        Founders trust <span style={{ color: 'var(--color-orange)' }}>clarity.</span>
+                        How we <span style={{ color: 'var(--color-orange)' }}>show up.</span>
                     </h2>
 
                     <div style={{
@@ -67,19 +67,19 @@ const HallOfFame = () => {
                         fontFamily: 'var(--font-body)'
                     }}>
                         <Testimonial
-                            quote="What stood out was how structured the process was. No hand-holding, no chaos. Things just moved."
-                            author="Alex D."
-                            role="Founder, Series A SaaS"
+                            quote="We'd rather lose a project than overpromise on a timeline. If we say two weeks, it ships in two weeks."
+                            author="Manish"
+                            role="Founder, Gensync"
                         />
                         <Testimonial
-                            quote="They didn't just make a pretty site. They fixed our entire pitch. We closed our round 3 weeks later."
-                            author="Sarah J."
-                            role="CEO, Fintech Startup"
+                            quote="We don't send decks full of jargon. We share the work, explain the thinking, and move on."
+                            author="Amulya"
+                            role="Visual Lead, Gensync"
                         />
                         <Testimonial
-                            quote="Clear communication. No ego. Just good work delivered on time."
-                            author="Mike R."
-                            role="Founder, E-commerce Brand"
+                            quote="Every project gets the same standard — whether it's a logo or a full product launch."
+                            author="The Team"
+                            role="Gensync"
                         />
                     </div>
 

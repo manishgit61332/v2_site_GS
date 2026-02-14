@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, X, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, X, ArrowRight, Play } from 'lucide-react';
 import { useSectionColor } from '../context/ScrollColorContext';
 import { WORK_FOLDERS } from '../data/workData';
 
@@ -183,7 +183,10 @@ const ServiceCard = ({ folder, onClick, globalProgress, isMobile, index }) => {
 
     return (
         <motion.div
-            onClick={onClick}
+            onClick={() => {
+                if (folder.comingSoon) return;
+                onClick();
+            }}
             initial="initial"
             whileHover="hover"
             whileTap={{ scale: 0.98 }}
@@ -258,8 +261,9 @@ const ServiceCard = ({ folder, onClick, globalProgress, isMobile, index }) => {
                     {folder.title}
                 </p>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', fontWeight: 500 }}>
-                    Open Folder <ArrowRight size={18} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: folder.comingSoon ? folder.color : '#fff', fontSize: '0.9rem', fontWeight: 500 }}>
+                    {/* Logic is handled in onClick, just text change here if needed, but for now standard "Open Folder" or we can make it dynamic */}
+                    {folder.comingSoon ? "Coming Soon" : "Open Folder"} {!folder.comingSoon && <ArrowRight size={18} />}
                 </div>
             </div>
         </motion.div>
@@ -341,64 +345,14 @@ const FolderDetailView = ({ folder, onClose }) => {
                 <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2rem', fontSize: '0.9rem' }}>Inside this folder</h4>
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gridTemplateColumns: folder.projects.some(p => p.isShort)
+                        ? 'repeat(auto-fill, minmax(200px, 1fr))'
+                        : 'repeat(auto-fit, minmax(300px, 1fr))',
                     gap: '2rem',
-                    marginBottom: '6rem'
+                    marginBottom: '4rem'
                 }}>
                     {folder.projects.map((project, idx) => (
-                        <div key={idx} style={{ position: 'relative' }}>
-                            <div style={{
-                                height: '250px',
-                                borderRadius: '16px',
-                                overflow: 'hidden',
-                                marginBottom: '1rem',
-                                backgroundColor: '#222'
-                            }}>
-                                {project.video ? (
-                                    <video
-                                        src={project.video}
-                                        autoPlay
-                                        loop
-                                        muted
-                                        playsInline
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                ) : (
-                                    <img src={project.img} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                )}
-                            </div>
-                            <h4 style={{ color: '#fff', fontSize: '1.2rem', marginBottom: '0.2rem' }}>{project.title}</h4>
-                            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{project.type}</p>
-                            {project.pdf && (
-                                <a
-                                    href={project.pdf}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        fontSize: '0.8rem',
-                                        color: folder.color,
-                                        textDecoration: 'none',
-                                        border: `1px solid ${folder.color}`,
-                                        padding: '0.25rem 0.75rem',
-                                        borderRadius: '50px',
-                                        transition: 'all 0.3s ease'
-                                    }}
-                                    onMouseOver={(e) => {
-                                        e.currentTarget.style.background = folder.color;
-                                        e.currentTarget.style.color = '#000';
-                                    }}
-                                    onMouseOut={(e) => {
-                                        e.currentTarget.style.background = 'transparent';
-                                        e.currentTarget.style.color = folder.color;
-                                    }}
-                                >
-                                    View Case Study <ArrowUpRight size={14} />
-                                </a>
-                            )}
-                        </div>
+                        <ProjectCard key={idx} project={project} folderColor={folder.color} />
                     ))}
                 </div>
 
@@ -409,7 +363,7 @@ const FolderDetailView = ({ folder, onClose }) => {
                     padding: '3rem',
                     border: '1px solid rgba(255,255,255,0.05)'
                 }}>
-                    <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2rem', fontSize: '0.9rem' }}>Client Feedback</h4>
+                    <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2rem', fontSize: '0.9rem' }}>Context</h4>
                     <div style={{ display: 'grid', gap: '2rem' }}>
                         {folder.testimonials.map((t, i) => (
                             <div key={i}>
@@ -426,8 +380,172 @@ const FolderDetailView = ({ folder, onClose }) => {
                     </div>
                 </div>
 
+                {/* Book a Call CTA */}
+                <div style={{
+                    marginTop: '3rem',
+                    padding: '3rem',
+                    borderRadius: '24px',
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    textAlign: 'center'
+                }}>
+                    <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                        This is just a taste
+                    </p>
+                    <h3 style={{ color: '#fff', fontFamily: 'var(--font-heading)', fontSize: '1.8rem', marginBottom: '2rem' }}>
+                        Book a call to view more.
+                    </h3>
+                    <a
+                        href="#thali-builder"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            onClose();
+                            setTimeout(() => {
+                                const el = document.getElementById('thali-builder') || document.getElementById('pricing');
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }, 600);
+                        }}
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            padding: '1rem 2.5rem',
+                            borderRadius: '100px',
+                            background: folder.color,
+                            color: '#000',
+                            fontWeight: 600,
+                            fontSize: '1rem',
+                            textDecoration: 'none',
+                            transition: 'transform 0.3s ease, opacity 0.3s ease'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.opacity = '0.85'}
+                        onMouseOut={(e) => e.currentTarget.style.opacity = '1'}
+                    >
+                        Book a Call <ArrowRight size={18} />
+                    </a>
+                </div>
+
             </div>
         </motion.div>
+    );
+};
+
+const ProjectCard = ({ project, folderColor }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const isShort = project.isShort;
+    const hasEmbed = !!(project.youtubeId || project.driveId || project.instagramId);
+
+    const thumbnailUrl = project.youtubeId
+        ? `https://img.youtube.com/vi/${project.youtubeId}/hqdefault.jpg`
+        : project.img || null;
+
+    const embedUrl = project.youtubeId
+        ? `https://www.youtube.com/embed/${project.youtubeId}?autoplay=1&rel=0&modestbranding=1`
+        : project.driveId
+            ? `https://drive.google.com/file/d/${project.driveId}/preview`
+            : project.instagramId
+                ? `https://www.instagram.com/reel/${project.instagramId}/embed`
+                : null;
+
+    return (
+        <div style={{ position: 'relative' }}>
+            <div
+                style={{
+                    aspectRatio: isShort ? '9/16' : '16/9',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    marginBottom: '1rem',
+                    backgroundColor: '#111',
+                    position: 'relative',
+                    cursor: hasEmbed && !isPlaying ? 'pointer' : 'default'
+                }}
+                onClick={() => hasEmbed && !isPlaying && setIsPlaying(true)}
+            >
+                {isPlaying && embedUrl ? (
+                    <iframe
+                        src={embedUrl}
+                        allow="autoplay; encrypted-media; fullscreen"
+                        allowFullScreen
+                        style={{ width: '100%', height: '100%', border: 'none' }}
+                        title={project.title}
+                    />
+                ) : (
+                    <>
+                        {thumbnailUrl ? (
+                            <img
+                                src={thumbnailUrl}
+                                alt={project.title}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                        ) : (
+                            <div style={{
+                                width: '100%', height: '100%',
+                                background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}>
+                                <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                    {project.title}
+                                </span>
+                            </div>
+                        )}
+                        {hasEmbed && (
+                            <div
+                                style={{
+                                    position: 'absolute', inset: 0,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    background: 'rgba(0,0,0,0.35)',
+                                    transition: 'background 0.3s ease'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.15)'}
+                                onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.35)'}
+                            >
+                                <div style={{
+                                    width: '60px', height: '60px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(255,255,255,0.12)',
+                                    backdropFilter: 'blur(12px)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    border: '1px solid rgba(255,255,255,0.2)'
+                                }}>
+                                    <Play size={22} fill="#fff" color="#fff" />
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+            <h4 style={{ color: '#fff', fontSize: '1.1rem', marginBottom: '0.2rem' }}>{project.title}</h4>
+            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>{project.type}</p>
+            {project.pdf && (
+                <a
+                    href={project.pdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.8rem',
+                        color: folderColor,
+                        textDecoration: 'none',
+                        border: `1px solid ${folderColor}`,
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '50px',
+                        transition: 'all 0.3s ease'
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.background = folderColor;
+                        e.currentTarget.style.color = '#000';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = folderColor;
+                    }}
+                >
+                    View Case Study <ArrowUpRight size={14} />
+                </a>
+            )}
+        </div>
     );
 };
 

@@ -22,17 +22,17 @@ const useMediaQuery = (query) => {
 // Services Data (Unchanged)
 const SERVICES = [
     // Staples
-    { id: 'web-design', category: 'Staples', name: 'Website Design', price: 1200, time: 14, desc: 'High-converting, premium aesthetic.', icon: <Layout size={20} />, previewColor: '#D4AF37', previewText: 'Minimalist Layouts', textColor: '#000' },
-    { id: 'brand-id', category: 'Staples', name: 'Brand Identity', price: 950, time: 10, desc: 'Logo, colors, typography system.', icon: <PenTool size={20} />, previewColor: '#8B4513', previewText: 'Bold Typography', textColor: '#fff' },
-    { id: 'rebranding', category: 'Staples', name: 'Rebranding', price: 1800, time: 20, desc: 'Complete visual overhaul.', icon: <RefreshCw size={20} />, previewColor: '#0a1f0a', previewText: 'Fresh Start', textColor: '#fff' },
+    { id: 'web-design', category: 'Staples', name: 'Website Design', price: 1200, time: 21, desc: 'High-converting, premium aesthetic.', icon: <Layout size={20} />, previewColor: '#D4AF37', previewText: 'Minimalist Layouts', textColor: '#000' },
+    { id: 'brand-id', category: 'Staples', name: 'Brand Identity', price: 800, time: 14, desc: 'Logo, colors, typography system.', icon: <PenTool size={20} />, previewColor: '#8B4513', previewText: 'Bold Typography', textColor: '#fff' },
+    { id: 'rebranding', category: 'Staples', name: 'Rebranding', price: 1800, time: 30, desc: 'Complete visual overhaul.', icon: <RefreshCw size={20} />, previewColor: '#0a1f0a', previewText: 'Fresh Start', textColor: '#fff' },
 
     // Content (Flavour)
-    { id: 'linkedin', category: 'Flavour', name: 'LinkedIn Content', price: 500, time: 0, desc: 'Thought leadership ghostwriting (Monthly).', icon: <Laptop size={20} />, previewColor: '#D4AF37', previewText: 'Viral Threads', textColor: '#000' },
-    { id: 'video-edit', category: 'Flavour', name: 'Video Editing', price: 750, time: 0, desc: 'Short-form reels & edits (Monthly).', icon: <Video size={20} />, previewColor: '#C5A028', previewText: 'Dynamic Cuts', textColor: '#000' },
-    { id: 'commercials', category: 'Flavour', name: 'AI Commercials', price: 800, time: 7, desc: 'Hyper-realistic product films.', icon: <Megaphone size={20} />, previewColor: '#333', previewText: 'Cinematic AI', textColor: '#fff' },
+    { id: 'linkedin', category: 'Flavour', name: 'LinkedIn Content', price: 600, time: 0, desc: 'Thought leadership ghostwriting (Monthly).', icon: <Laptop size={20} />, previewColor: '#D4AF37', previewText: 'Viral Threads', textColor: '#000' },
+    { id: 'video-edit', category: 'Flavour', name: 'Video Editing', price: 800, time: 0, desc: 'Short-form reels & edits (Monthly).', icon: <Video size={20} />, previewColor: '#C5A028', previewText: 'Dynamic Cuts', textColor: '#000' },
+    { id: 'commercials', category: 'Flavour', name: 'AI Commercials', price: 600, time: 7, desc: 'Hyper-realistic product films.', icon: <Megaphone size={20} />, previewColor: '#333', previewText: 'Cinematic AI', textColor: '#fff' },
 
     // Mobile/Scale (Power)
-    { id: 'app-design', category: 'Power', name: 'Mobile App Design', price: 1600, time: 21, desc: 'UI/UX that feels native.', icon: <Smartphone size={20} />, previewColor: '#D4AF37', previewText: 'Smooth UX', textColor: '#000' },
+    { id: 'app-design', category: 'Power', name: 'Mobile App Design', price: 2200, time: 30, desc: 'UI/UX that feels native.', icon: <Smartphone size={20} />, previewColor: '#D4AF37', previewText: 'Smooth UX', textColor: '#000' },
 ];
 
 // --- 3D Tilt Card Component ---

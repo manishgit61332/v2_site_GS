@@ -60,7 +60,7 @@ const Philosophy = () => {
                 <div>
                     <ThinkingPoint
                         title="Why most AI content feels generic"
-                        description="Because it averages everything. We force the models to be specific, opinionated, and weird."
+                        description="Because it averages everything. We force the models to be specific, opinionated, and distinctive."
                         delay={0.2}
                     />
                     <ThinkingPoint

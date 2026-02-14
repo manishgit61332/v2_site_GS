@@ -96,7 +96,7 @@ const SystemFramework = () => {
                         How We <span style={{ color: 'var(--color-orange)' }}>Actually Work</span>
                     </h2>
                     <p style={{ color: 'var(--color-light-gray)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem' }}>
-                        Founders trust process, not promises. Here is our journey.
+                        Founders trust process, not promises. Here's ours.
                     </p>
                 </div>
 

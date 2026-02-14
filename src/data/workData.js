@@ -11,6 +11,10 @@ import PlayaThumb from '../assets/Portfolio/website/Playa/playa_thumbnail.png';
 import IfsPdf from '../assets/Portfolio/Branding and Identity/IFS Brand Identity.pdf';
 import IfsThumb from '../assets/Portfolio/Branding and Identity/IFS Thumbnail.png';
 import ProjectXPdf from '../assets/Portfolio/Branding and Identity/ProjeectX/ProjectXB.pdf';
+import ProjectXThumb from '../assets/Portfolio/Branding and Identity/ProjeectX/thumbnail.png';
+
+import LongFormThumb from '../assets/Portfolio/Videos/Long form.png';
+import LiveEventThumb from '../assets/Portfolio/Videos/live event.png';
 
 export const WORK_FOLDERS = [
     {
@@ -42,27 +46,35 @@ export const WORK_FOLDERS = [
             }
         ],
         testimonials: [
-            { quote: "Our conversion rate doubled within 30 days of launch.", author: "James K.", role: "CMO, Nexus" },
-            { quote: "Finally, a site that looks like a billion dollars.", author: "Elena R.", role: "Founder, Velvet" }
+            { quote: "Each of these sites was built to convert — not just look good. We obsess over load times, scroll behavior, and CTA placement.", author: "Gensync", role: "Design Team" }
         ],
-        details: "We don't build brochures. We build digital engines. Every pixel is engineered for authority and conversion."
+        details: "Every site we build is a conversion engine first, portfolio piece second."
     },
     {
         id: 'product-commercials',
-        title: 'Commercials',
+        title: 'Films & Motion',
         description: 'High-octane visuals.',
         subtitle: '3D & Film Production',
         bg: '#1f0b00',
         img: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop',
         color: '#FF7701',
         projects: [
-            { title: 'Hyperion X', type: 'Product Launch', img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop' },
-            { title: 'Lumina Drink', type: 'TV Spot', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=2000&auto=format&fit=crop' }
+            { title: 'DetectifyAI', type: 'AI Product Launch', youtubeId: '8M6dQsMxPAQ' },
+            { title: 'ConnectME AI', type: 'AI Commercial', youtubeId: 'inCvbw8sFEY' },
+            { title: 'ProjectX Infinity', type: '3D Teaser', youtubeId: 'vQPAqghlIBM' },
+            { title: 'AI Product Showcase', type: 'Use-Case Film', youtubeId: '6En4lSzsiOc' },
+            { title: 'Cultural Fest', type: 'Aftermovie Teaser', youtubeId: '1znH3Y0jOkQ' },
+            { title: 'BayLink', type: 'Product Explainer', youtubeId: 'MN7Ci83ZFhw' },
+            { title: 'Street Style Interview', type: 'Viral Interview (200k+)', youtubeId: 'YwRZnXPOQbc' },
+            { title: 'Challenge Video', type: 'Engaging Edit', youtubeId: 'cDT2qDE9QVc' },
+            { title: 'Podcast Edit', type: 'Long Form Edit', youtubeId: 's7c9RapKnBg' },
+            { title: 'Cinematic Edit', type: 'Long Form', driveId: '1BNcHbCYlwGpPVwTtmjZKEfjhSMqdtWJE', img: LongFormThumb },
+            { title: 'Concert Film', type: 'Live Event', driveId: '1HroW6s38-IXYSlCSs5qxavbiZAJxLoF8', img: LiveEventThumb }
         ],
         testimonials: [
-            { quote: "The most insane visuals we've ever had. Period.", author: "Marcus T.", role: "Director, Hyperion" }
+            { quote: "Every project here started with a tight brief and a clear story. The visuals came after the thinking.", author: "Gensync", role: "Production Team" }
         ],
-        details: "Stop taking photos with your iPhone. We create 3D renders and motion graphics that make your product look physical, tangible, and inevitable."
+        details: "From 3D product films to event coverage — every frame is intentional."
     },
     {
         id: 'branding',
@@ -83,13 +95,13 @@ export const WORK_FOLDERS = [
                 title: 'Project X',
                 type: 'Brand Strategy',
                 pdf: ProjectXPdf,
-                img: 'https://images.unsplash.com/photo-1634942537034-2531766767d1?q=80&w=2000&auto=format&fit=crop'
+                img: ProjectXThumb
             }
         ],
         testimonials: [
-            { quote: "It feels like us, but 10x bigger.", author: "Sarah L.", role: "CEO, Solace" }
+            { quote: "We don't design logos in isolation. Every identity system ships with usage guidelines, color specs, and typography rules.", author: "Gensync", role: "Brand Team" }
         ],
-        details: "A logo is not a brand. A brand is a feeling. We design the system—type, color, voice, motion—that creates that feeling."
+        details: "Identity systems — type, color, voice, motion — designed to scale."
     },
     {
         id: 'social-campaigns',
@@ -100,12 +112,29 @@ export const WORK_FOLDERS = [
         img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop',
         color: '#C27B7F',
         projects: [
-            { title: 'Founders Week', type: 'Docu-series', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2000&auto=format&fit=crop' },
-            { title: 'TechTalks', type: 'Short Form', img: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=2000&auto=format&fit=crop' }
+            { title: '2025 Showreel', type: 'Agency Reel', youtubeId: 'e8sbDDwoQsI', isShort: true },
+            { title: 'Restaurant Promo', type: 'Brand Promotion', youtubeId: 'YuO6x4xBVJI', isShort: true },
+            { title: 'Study Abroad', type: 'UGC Video', youtubeId: 'YeNXhcuQ8NU', isShort: true },
+            { title: 'Podcast Clip', type: 'Short Form', youtubeId: 'AII2yVENco8', isShort: true },
+            { title: 'Quick Cut', type: 'Short Form Edit', youtubeId: 'qdzgwLNigos', isShort: true },
+            { title: 'Lifestyle Edit', type: 'Creative Short', youtubeId: 'BSiPicgRTSg', isShort: true }
         ],
         testimonials: [
-            { quote: "4M views in 2 weeks. Enough said.", author: "David P.", role: "Growth Lead" }
+            { quote: "Short form that stops the scroll. We handle the edit, pacing, and hooks — you just show up.", author: "Gensync", role: "Content Team" }
         ],
-        details: "You don't need 'posts'. You need a media engine. We build the workflows that keep you in the feed every single day."
+        details: "Scroll-stopping short form. We handle edit, pacing, and hooks."
+    },
+    {
+        id: 'gensync-labs',
+        title: 'Gensync Labs',
+        description: 'Experimental R&D.',
+        subtitle: 'The Future.',
+        bg: '#001a1a', // Deep Cyan/Black
+        img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop', // Tech/Chip image
+        color: '#00FFFF', // Cyan/Electric Blue
+        comingSoon: true, // Flag for behavior
+        projects: [], // Empty
+        testimonials: [],
+        details: "Where we build the tools that build the future."
     }
 ];

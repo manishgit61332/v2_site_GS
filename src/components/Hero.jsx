@@ -114,7 +114,7 @@ const Hero = () => {
                     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' }}>
 
                         {/* PRIMARY CTA - Mailto */}
-                        <a href="mailto:contact@gensync.in?subject=Tell%20us%20what%20you're%20building" style={{
+                        <a href="#thali" onClick={(e) => { e.preventDefault(); document.getElementById('thali')?.scrollIntoView({ behavior: 'smooth' }); }} style={{
                             fontSize: '1rem',
                             color: '#000',
                             backgroundColor: '#fff',
