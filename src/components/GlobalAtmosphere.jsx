@@ -6,13 +6,15 @@ const GlobalAtmosphere = () => {
 
     // Map scroll progress to specific hex colors
     // 0% (Hero) -> #050505
-    // 25% (Selected Work) -> #0a1a0a (Forest Green)
-    // 60% (Kitchen) -> #050505 (Back to Void)
-    // 85% (Thali) -> #0f1f0f (Green-Tinted Charcoal)
+    // 20% (Works) -> #051408 (Dark Green)
+    // 40% (Protocol) -> #050505 (Black)
+    // 60% (Team) -> #111111 (Dark Grey)
+    // 80% (Early) -> #050505 (Black)
+    // 95% (Thali) -> #0f1f0f (Green-Tinted Charcoal)
     const backgroundColor = useTransform(
         scrollYProgress,
-        [0, 0.25, 0.6, 0.85],
-        ['#050505', '#0a1a0a', '#050505', '#0f1f0f']
+        [0, 0.2, 0.4, 0.6, 0.8, 0.95],
+        ['#050505', '#051408', '#050505', '#111111', '#050505', '#0f1f0f']
     );
 
     return (

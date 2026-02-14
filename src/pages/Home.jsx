@@ -26,10 +26,11 @@ const Home = () => {
 
             <Navbar />
             <Hero />
+            <CaseStudies />
 
             <SystemFramework /> {/* Moved up: Process before Work */}
             <TeamKitchen />
-            <CaseStudies />
+
             <WereEarly />
             <Belief />
             <Philosophy />
