@@ -30,7 +30,8 @@ export const WORK_FOLDERS = [
                 title: 'ConnectME',
                 type: 'Web Platform & Identity',
                 pdf: ConnectMePdf,
-                img: CmeThumb
+                img: CmeThumb,
+                link: 'https://connect-me-v14.vercel.app/'
             },
             {
                 title: 'AMES',
@@ -43,6 +44,28 @@ export const WORK_FOLDERS = [
                 type: 'Hospitality Website',
                 pdf: PlayaPdf,
                 img: PlayaThumb
+            }
+        ],
+        moreWork: [
+            {
+                title: 'WNE3',
+                type: 'Web3 Experience',
+                link: 'https://www.wne3.com'
+            },
+            {
+                title: 'Aurax',
+                type: 'Corporate Website',
+                link: 'https://www.aurax.co.in/'
+            },
+            {
+                title: 'Mad Scientist',
+                type: 'Portfolio / Creative',
+                link: 'https://madscientist.tech/'
+            },
+            {
+                title: 'The Build Club',
+                type: 'Community Platform',
+                link: 'https://thebuildclub.in/'
             }
         ],
         testimonials: [

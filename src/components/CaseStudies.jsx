@@ -356,6 +356,48 @@ const FolderDetailView = ({ folder, onClose }) => {
                     ))}
                 </div>
 
+                {/* More Work List (Text Links) */}
+                {folder.moreWork && (
+                    <div style={{ marginBottom: '4rem' }}>
+                        <h4 style={{ color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem', fontSize: '0.9rem' }}>More Selected Work</h4>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>
+                            {folder.moreWork.map((item, idx) => (
+                                <a
+                                    key={idx}
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        padding: '1.25rem',
+                                        backgroundColor: 'rgba(255,255,255,0.03)',
+                                        border: '1px solid rgba(255,255,255,0.05)',
+                                        borderRadius: '12px',
+                                        textDecoration: 'none',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)';
+                                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.03)';
+                                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)';
+                                    }}
+                                >
+                                    <div>
+                                        <div style={{ color: '#fff', fontWeight: 500, fontSize: '1rem', marginBottom: '0.1rem' }}>{item.title}</div>
+                                        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem' }}>{item.type}</div>
+                                    </div>
+                                    <ArrowUpRight size={18} color={folder.color} />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Testimonials */}
                 <div style={{
                     background: 'rgba(255,255,255,0.03)',
@@ -531,7 +573,9 @@ const ProjectCard = ({ project, folderColor }) => {
                         border: `1px solid ${folderColor}`,
                         padding: '0.25rem 0.75rem',
                         borderRadius: '50px',
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        marginRight: '0.5rem',
+                        marginBottom: '0.5rem'
                     }}
                     onMouseOver={(e) => {
                         e.currentTarget.style.background = folderColor;
@@ -542,7 +586,36 @@ const ProjectCard = ({ project, folderColor }) => {
                         e.currentTarget.style.color = folderColor;
                     }}
                 >
-                    View Case Study <ArrowUpRight size={14} />
+                    Case Study <ArrowUpRight size={14} />
+                </a>
+            )}
+            {project.link && (
+                <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        fontSize: '0.8rem',
+                        color: '#fff',
+                        textDecoration: 'none',
+                        border: `1px solid rgba(255,255,255,0.3)`,
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '50px',
+                        transition: 'all 0.3s ease'
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.background = '#fff';
+                        e.currentTarget.style.color = '#000';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                        e.currentTarget.style.color = '#fff';
+                    }}
+                >
+                    Visit Live Site <ArrowUpRight size={14} />
                 </a>
             )}
         </div>
